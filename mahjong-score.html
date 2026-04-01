@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>健康麻雀 成績管理</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
+.app{max-width:700px;margin:0 auto;padding:1rem}
+h1{font-size:18px;font-weight:600;padding:1rem 0 0.5rem;color:#1a1a1a}
+.tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:1.5rem;flex-wrap:wrap;background:#fff;border-radius:12px 12px 0 0;padding:0 4px}
+.tab{padding:10px 14px;font-size:13px;cursor:pointer;border:none;background:none;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit}
+.tab.on{color:#1a1a1a;border-bottom-color:#1a1a1a;font-weight:600}
+.pane{display:none}.pane.on{display:block}
+.card{background:#fff;border-radius:12px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.row{display:flex;gap:6px;margin-bottom:8px;align-items:flex-end}
+.col{flex:1;min-width:0}
+.col label{display:block;font-size:12px;color:#888;margin-bottom:4px}
+select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8px 10px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;font-family:inherit;-webkit-appearance:none}
+select:focus,input:focus{outline:none;border-color:#888}
+.btn{padding:8px 16px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;cursor:pointer;font-family:inherit}
+.btn:hover{background:#f5f4f0}
+.btn.p{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.btn.p:hover{background:#333}
+.btn.d{color:#c0392b;border-color:#e8a9a4}
+.srow{display:grid;grid-template-columns:1fr 90px;gap:8px;align-items:center;padding:9px 10px;background:#f5f4f0;border-radius:8px;margin-bottom:6px}
+.srow select,.srow input{width:100%;min-width:0}
+.srow input{text-align:right}
+.stotal{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:7px 10px;font-size:13px;border-radius:8px;margin-top:4px;border:1px solid #ddd;background:#fff}
+.prow{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #eee}
+.prow:last-child{border-bottom:none}
+.pnum{font-size:14px;font-weight:600;color:#aaa;min-width:24px;text-align:center;flex-shrink:0}
+.pinfo{flex:1;min-width:0}
+.pname{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.psub{font-size:11px;color:#aaa;margin-top:2px}
+.pright{text-align:right;flex-shrink:0}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bk{background:#ddeeff;color:#1a5fa8}
+.bd{background:#fff0d0;color:#a06000}
+.ptval{font-size:13px;font-weight:600;display:block;margin-top:3px}
+.bar{height:3px;background:#eee;border-radius:2px;margin-top:5px;overflow:hidden}
+.barfill{height:100%;border-radius:2px;transition:width 0.3s}
+.hitem{padding:9px 0;border-bottom:1px solid #eee}
+.hitem:last-child{border-bottom:none}
+.hdate{font-size:11px;color:#aaa;margin-bottom:5px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.chip{padding:3px 8px;background:#f5f4f0;border-radius:20px;font-size:12px}
+.chip.hi{background:#e6f4e6;color:#2a7a2a;font-weight:600}
+.chip.lo{background:#fdecea;color:#c0392b}
+.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:10px}
+.msg.ok{background:#e6f4e6;color:#2a7a2a}
+.msg.ng{background:#fdecea;color:#c0392b}
+.msg.info{background:#e8f0fe;color:#1a5fa8}
+.empty{text-align:center;color:#aaa;font-size:13px;padding:2rem 0}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem}
+.overlay.on{display:flex}
+.modal{background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:320px}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:1rem}
+.btnrow{display:flex;gap:8px;justify-content:flex-end;margin-top:1rem}
+.fl{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;gap:8px;flex-wrap:wrap}
+.import-area{border:2px dashed #ddd;border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer}
+.import-area:hover{background:#f5f4f0}
+.import-area p{font-size:13px;color:#aaa;margin-top:6px}
+.seg{display:flex;border:1px solid #ddd;border-radius:8px;overflow:hidden;background:#fff}
+.seg button{flex:1;padding:6px 8px;font-size:12px;border:none;background:none;color:#888;cursor:pointer;border-right:1px solid #ddd;font-family:inherit}
+.seg button:last-child{border-right:none}
+.seg button.on{background:#1a1a1a;color:#fff;font-weight:600}
+.score-pos{color:#2a7a2a;font-weight:600}
+.score-neg{color:#c0392b;font-weight:600}
+.loading{text-align:center;color:#aaa;font-size:13px;padding:3rem 0}
+.rank1{color:#c8a400;font-weight:700}
+.rank2{color:#aaa;font-weight:700}
+.rank3{color:#a0522d;font-weight:700}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>健康麻雀 成績管理</h1>
+
+<div class="tabs">
+  <button class="tab on" onclick="showTab('input',this)">スコア入力</button>
+  <button class="tab" onclick="showTab('ranking',this)">ランキング</button>
+  <button class="tab" onclick="showTab('history',this)">履歴</button>
+  <button class="tab" onclick="showTab('players',this)">参加者</button>
+  <button class="tab" onclick="showTab('settings',this)">設定</button>
+</div>
+
+<div id="pane-input" class="pane on">
+  <div id="alertbox"></div>
+  <div class="card">
+    <div class="row">
+      <div class="col"><label>対局日</label><input type="date" id="gdate"></div>
+      <div class="col"><label>形式</label>
+        <select id="gtype" onchange="buildSlots()">
+          <option value="3">3人打ち</option>
+          <option value="4" selected>4人打ち</option>
+          <option value="5">5人打ち</option>
+        </select>
+      </div>
+      <div class="col"><label>回戦</label>
+        <select id="ground">
+          <option value="1">1回戦</option>
+          <option value="2">2回戦</option>
+          <option value="3">3回戦</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-size:12px;color:#aaa;margin-bottom:10px">スコアを直接入力（例: +25.0 / -12.5）</div>
+    <div id="slots"><div class="loading">読み込み中...</div></div>
+    <div id="total-bar" class="stotal" style="display:none">
+      <span style="font-size:12px;color:#aaa">合計</span>
+      <span id="total-val" style="font-weight:600">0.0</span>
+      <span id="total-status" style="font-size:12px"></span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn p" onclick="submitGame()">記録する</button>
+      <button class="btn" onclick="clearSlots()">クリア</button>
+    </div>
+  </div>
+</div>
+
+<div id="pane-ranking" class="pane">
+  <div class="fl">
+    <span style="font-size:15px;font-weight:600">ランキング</span>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <div class="seg" id="rank-period">
+        <button class="on" onclick="setRankPeriod('today',this)">今日</button>
+        <button onclick="setRankPeriod('month',this)">今月</button>
+        <button onclick="setRankPeriod('all',this)">全期間</button>
+      </div>
+      <select id="rfilt" onchange="renderRanking()" style="font-size:12px;padding:6px 8px;width:auto">
+        <option value="all">全員</option><option value="kyu">級位者</option><option value="dan">段位者</option>
+      </select>
+    </div>
+  </div>
+  <div id="rank-subtitle" style="font-size:12px;color:#aaa;margin-bottom:10px"></div>
+  <div id="ranking-list"></div>
+</div>
+
+<div id="pane-history" class="pane">
+  <div class="fl">
+    <span style="font-size:15px;font-weight:600">履歴</span>
+    <select id="hfilt" onchange="renderHistory()" style="font-size:12px;padding:6px 8px;width:auto"><option value="">全員</option></select>
+  </div>
+  <div id="history-list"></div>
+</div>
+
+<div id="pane-players" class="pane">
+  <div class="fl"><span style="font-size:15px;font-weight:600">参加者管理</span><button class="btn p" onclick="openModal()">+ 追加</button></div>
+  <div id="players-list"></div>
+</div>
+
+<div id="pane-settings" class="pane">
+  <div style="font-size:15px;font-weight:600;margin-bottom:1rem">設定</div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px">接続状態</div>
+    <div id="conn-status" class="msg info">Firebaseに接続中...</div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px">過去データをインポート</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:10px">Google AI StudioのバックアップJSONを読み込めるよ。NPC・NPC2は自動除外。</div>
+    <div class="import-area" onclick="document.getElementById('imp').click()">
+      <div style="font-size:22px;color:#aaa">+</div>
+      <p>JSONファイルをタップして選択</p>
+    </div>
+    <input type="file" id="imp" accept=".json" style="display:none" onchange="handleImport(event)">
+    <div id="import-msg" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px">データをリセット</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:10px">全データを削除。元に戻せないよ！</div>
+    <button class="btn d" onclick="resetAll()">全データを削除する</button>
+  </div>
+</div>
+
+<div class="overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">参加者を追加</div>
+    <div style="margin-bottom:8px">
+      <label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">お名前</label>
+      <input type="text" id="new-name" placeholder="例: 山田太郎">
+    </div>
+    <div>
+      <label style="font-size:12px;color:#aaa;display:block;margin-bottom:4px">ふりがな（任意）</label>
+      <input type="text" id="new-kana" placeholder="例: やまだたろう">
+    </div>
+    <div class="btnrow">
+      <button class="btn" onclick="closeModal()">キャンセル</button>
+      <button class="btn p" onclick="addPlayer()">追加</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAge1UykrGwCLjAJlFWaHVkJHz58Cgvcjw",
+  authDomain: "mahjong-score-fe3f2.firebaseapp.com",
+  projectId: "mahjong-score-fe3f2",
+  storageBucket: "mahjong-score-fe3f2.firebasestorage.app",
+  messagingSenderId: "804212174803",
+  appId: "1:804212174803:web:8c2567ac7331d941804926"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const RANKS=[
+  {l:'10級',t:'k',up:100},{l:'9級',t:'k',up:200},{l:'8級',t:'k',up:300},
+  {l:'7級',t:'k',up:400},{l:'6級',t:'k',up:500},{l:'5級',t:'k',up:600},
+  {l:'4級',t:'k',up:700},{l:'3級',t:'k',up:800},{l:'2級',t:'k',up:900},{l:'1級',t:'k',up:1000},
+  {l:'初段',t:'d',up:200,dn:-100},{l:'二段',t:'d',up:400,dn:-200},
+  {l:'三段',t:'d',up:600,dn:-300},{l:'四段',t:'d',up:800,dn:-400},
+  {l:'五段',t:'d',up:1000,dn:-500},{l:'六段',t:'d',up:1200,dn:-600},
+  {l:'七段',t:'d',up:1400,dn:-700},{l:'八段',t:'d',up:1600,dn:-800},
+  {l:'九段',t:'d',up:1800,dn:-900},{l:'十段',t:'d',up:99999,dn:-1000}
+];
+const UMA={3:{1:30,2:0,3:-30},4:{1:30,2:10,3:-10,4:-30},5:{1:40,2:20,3:0,4:-20,5:-40}};
+const TYPE_MAP={'three-player':3,'four-player':4,'five-player':5};
+const NPC_NAMES=['NPC','NPC2'];
+const SCORE_START='2026-01-01';
+
+let players=[];
+let games=[];
+let rankPeriod='today';
+
+function calcBonus(myRi,oppRi,iWon){
+  const diff=oppRi-myRi;
+  if(iWon){if(diff<3)return 0;if(diff<6)return 5;if(diff<10)return 10;return 15;}
+  else{if(diff>-3)return 0;if(diff>-6)return -5;if(diff>-10)return -10;return -15;}
+}
+
+function buildResults(entries){
+  const n=entries.length;const uma=UMA[n]||UMA[4];
+  const sorted=[...entries].sort((a,b)=>b.score-a.score);
+  const umaMap={};sorted.forEach((e,i)=>{umaMap[e.pid]=uma[i+1]||0;});
+  return entries.map(me=>{
+    const place=sorted.findIndex(s=>s.pid===me.pid)+1;
+    const base=umaMap[me.pid]||0;let bonus=0;
+    entries.forEach(opp=>{if(opp.pid===me.pid)return;bonus+=calcBonus(me.ri||0,opp.ri||0,place<(sorted.findIndex(s=>s.pid===opp.pid)+1));});
+    return{...me,place,rpt:base+bonus,bonus};
+  });
+}
+
+function recomputeRanks(playerList,gameList){
+  playerList.forEach(p=>{p.ri=0;p.rpt=0;p.totalScore=0;p.games=0;});
+  const sorted=[...gameList].sort((a,b)=>a.date.localeCompare(b.date));
+  sorted.forEach(g=>{
+    g.results.forEach(r=>{
+      const p=playerList.find(x=>x.id===r.pid);if(!p)return;
+      p.totalScore=(p.totalScore||0)+r.score;p.games=(p.games||0)+1;
+      const ri=p.ri||0;let rpt=(p.rpt||0)+r.rpt;const rank=RANKS[ri];
+      if(rank.t==='k'){if(rpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}else{p.rpt=Math.max(0,rpt);}}
+      else{if(rpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}else if(rpt<=(rank.dn||0)&&ri>10){p.ri=ri-1;p.rpt=0;}else{p.rpt=rpt;}}
+    });
+  });
+}
+
+async function loadAll(){
+  try{
+    const [psSnap,gsSnap]=await Promise.all([getDocs(collection(db,'players')),getDocs(collection(db,'games'))]);
+    players=psSnap.docs.map(d=>({id:d.id,...d.data()}));
+    games=gsSnap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('conn-status').textContent='Firebaseに接続済み';
+    document.getElementById('conn-status').className='msg ok';
+  }catch(e){
+    document.getElementById('conn-status').textContent='接続エラー: '+e.message;
+    document.getElementById('conn-status').className='msg ng';
+  }
+  document.getElementById('gdate').value=new Date().toISOString().slice(0,10);
+  refreshAll();
+}
+
+async function savePlayer(p){
+  const {id,...data}=p;
+  await setDoc(doc(db,'players',String(id)),data);
+}
+
+async function saveGame(g){
+  const {id,...data}=g;
+  await setDoc(doc(db,'games',String(id)),data);
+}
+
+function makeOpts(selId){
+  return players.map(p=>`<option value="${p.id}"${p.id===selId?' selected':''}>${p.name}</option>`).join('');
+}
+
+window.buildSlots=function(){
+  const n=parseInt(document.getElementById('gtype').value);
+  const c=document.getElementById('slots');
+  const tb=document.getElementById('total-bar');
+  if(!players.length){c.innerHTML='<div class="empty">まず「参加者」タブで参加者を追加してね</div>';tb.style.display='none';return;}
+  let h='';
+  for(let i=0;i<n;i++){
+    const did=players[i]?players[i].id:'';
+    h+=`<div class="srow"><select id="ps${i}">${makeOpts(did)}</select><input type="number" id="sc${i}" placeholder="スコア" step="0.1" oninput="updateTotal()"></div>`;
+  }
+  c.innerHTML=h;tb.style.display='flex';updateTotal();
+};
+
+window.updateTotal=function(){
+  const n=parseInt(document.getElementById('gtype').value);
+  let total=0,allFilled=true;
+  for(let i=0;i<n;i++){const v=parseFloat(document.getElementById('sc'+i)?.value);if(isNaN(v))allFilled=false;else total+=v;}
+  const t=Math.round(total*10)/10;
+  const tv=document.getElementById('total-val'),ts=document.getElementById('total-status');
+  tv.textContent=(t>0?'+':'')+t.toFixed(1);
+  if(!allFilled){ts.textContent='';tv.style.color='#aaa';}
+  else if(Math.abs(t)<0.05){ts.textContent='OK';ts.style.color='#2a7a2a';tv.style.color='#2a7a2a';}
+  else{ts.textContent=`誤差 ${t>0?'+':''}${t.toFixed(1)}`;ts.style.color='#c0392b';tv.style.color='#c0392b';}
+};
+
+window.clearSlots=function(){
+  const n=parseInt(document.getElementById('gtype').value);
+  for(let i=0;i<n;i++){const el=document.getElementById('sc'+i);if(el)el.value='';}
+  updateTotal();
+};
+
+window.submitGame=async function(){
+  const n=parseInt(document.getElementById('gtype').value);
+  const date=document.getElementById('gdate').value;
+  const round=parseInt(document.getElementById('ground').value);
+  if(!date){flash('日付を入力してね','ng');return;}
+  const entries=[];const ids=new Set();
+  for(let i=0;i<n;i++){
+    const pid=document.getElementById('ps'+i)?.value;
+    const sc=document.getElementById('sc'+i)?.value;
+    const score=parseFloat(sc);
+    if(!pid){flash(`${i+1}人目を選んでね`,'ng');return;}
+    if(sc===''||isNaN(score)){flash(`${i+1}人目のスコアを入力してね`,'ng');return;}
+    if(ids.has(pid)){flash('同じプレイヤーが重複してるよ','ng');return;}
+    ids.add(pid);
+    const p=players.find(x=>x.id===pid);
+    entries.push({pid,score:Math.round(score*10)/10,ri:p?p.ri||0:0});
+  }
+  const total=Math.round(entries.reduce((s,e)=>s+e.score,0)*10)/10;
+  if(Math.abs(total)>=0.1){flash(`合計が ${total>0?'+':''}${total.toFixed(1)} になってるよ！確認してね`,'ng');return;}
+  const results=buildResults(entries);
+  const gid=String(Date.now());
+  const gameData={date,round,type:n,results};
+  games.push({id:gid,...gameData});
+  recomputeRanks(players,games);
+  try{
+    await saveGame({id:gid,...gameData});
+    const batch=writeBatch(db);
+    players.forEach(p=>{const{id,...d}=p;batch.set(doc(db,'players',String(id)),d);});
+    await batch.commit();
+    flash(`${date} ${round}回戦を記録したよ!`,'ok');
+    clearSlots();refreshAll();
+  }catch(e){flash('保存エラー: '+e.message,'ng');}
+};
+
+function flash(msg,type){
+  const el=document.getElementById('alertbox');
+  el.innerHTML=`<div class="msg ${type}">${msg}</div>`;
+  setTimeout(()=>el.innerHTML='',4000);
+}
+
+window.showTab=function(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');document.getElementById('pane-'+name).classList.add('on');
+  if(name==='input')buildSlots();
+  if(name==='ranking')renderRanking();
+  if(name==='history'){fillHfilt();renderHistory();}
+  if(name==='players')renderPlayers();
+};
+
+function refreshAll(){buildSlots();renderRanking();renderPlayers();fillHfilt();renderHistory();}
+
+window.setRankPeriod=function(p,el){
+  rankPeriod=p;
+  document.querySelectorAll('#rank-period button').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');renderRanking();
+};
+
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function monthStr(){return new Date().toISOString().slice(0,7);}
+
+function getDateRange(){
+  if(rankPeriod==='today'){const t=todayStr();return{from:t,to:t,label:t+' の結果'};}
+  if(rankPeriod==='month'){const m=monthStr();return{from:m+'-01',to:m+'-31',label:m.replace('-','年')+'月の合計'};}
+  return{from:SCORE_START,to:'9999-12-31',label:'2026年1月1日以降・全期間'};
+}
+
+function renderRanking(){
+  const {from,to,label}=getDateRange();
+  document.getElementById('rank-subtitle').textContent=label;
+  const filt=document.getElementById('rfilt')?.value||'all';
+  const filtGames=games.filter(g=>g.date>=from&&g.date<=to);
+
+  if(rankPeriod==='all'){
+    let ps=[...players].sort((a,b)=>{const ra=a.ri||0,rb=b.ri||0;return ra!==rb?rb-ra:(b.rpt||0)-(a.rpt||0);});
+    if(filt==='kyu')ps=ps.filter(p=>RANKS[p.ri||0].t==='k');
+    if(filt==='dan')ps=ps.filter(p=>RANKS[p.ri||0].t==='d');
+    if(!ps.length){document.getElementById('ranking-list').innerHTML='<div class="empty">参加者がいないよ</div>';return;}
+    let h='<div class="card">';
+    ps.forEach((p,i)=>{
+      const r=RANKS[p.ri||0];const pt=p.rpt||0;
+      const range=r.t==='k'?r.up:(r.up-(r.dn||0));const base=r.t==='k'?0:(r.dn||0);
+      const pct=Math.min(100,Math.max(0,Math.round((pt-base)/range*100)));
+      const avg=p.games>0?((p.totalScore||0)/p.games).toFixed(2):'-';
+      const nc=i===0?'rank1':i===1?'rank2':i===2?'rank3':'pnum';
+      h+=`<div class="prow"><div class="${nc} pnum">${i+1}</div><div class="pinfo"><div class="pname">${p.name}</div><div class="psub">${p.games||0}戦 / 平均 ${avg}</div><div class="bar"><div class="barfill" style="width:${pct}%;background:${r.t==='d'?'#e8a020':'#3a8fd8'}"></div></div></div><div class="pright"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><span class="ptval">${pt>0?'+':''}${pt}pt</span></div></div>`;
+    });
+    document.getElementById('ranking-list').innerHTML=h+'</div>';
+    return;
+  }
+
+  const scoreMap={},gamesMap={};
+  filtGames.forEach(g=>{g.results.forEach(r=>{if(!scoreMap[r.pid]){scoreMap[r.pid]=0;gamesMap[r.pid]=0;}scoreMap[r.pid]+=r.score;gamesMap[r.pid]++;});});
+  let pids=Object.keys(scoreMap);
+  if(!pids.length){document.getElementById('ranking-list').innerHTML='<div class="empty">この期間の対局データがないよ</div>';return;}
+  let ps=pids.map(pid=>{
+    const p=players.find(x=>x.id===pid);
+    return{pid,name:p?p.name:'?',score:Math.round(scoreMap[pid]*10)/10,games:gamesMap[pid],ri:p?p.ri||0:0};
+  }).sort((a,b)=>b.score-a.score);
+  if(filt==='kyu')ps=ps.filter(p=>RANKS[p.ri].t==='k');
+  if(filt==='dan')ps=ps.filter(p=>RANKS[p.ri].t==='d');
+  if(!ps.length){document.getElementById('ranking-list').innerHTML='<div class="empty">該当する参加者がいないよ</div>';return;}
+  let h='<div class="card">';
+  ps.forEach((p,i)=>{
+    const r=RANKS[p.ri];const sc=p.score;
+    const avg=p.games>0?(sc/p.games).toFixed(2):'-';
+    const nc=i===0?'rank1':i===1?'rank2':i===2?'rank3':'pnum';
+    h+=`<div class="prow"><div class="${nc} pnum">${i+1}</div><div class="pinfo"><div class="pname">${p.name}</div><div class="psub">${p.games}戦 / 平均 ${avg}</div></div><div class="pright"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><span class="ptval ${sc>=0?'score-pos':'score-neg'}">${sc>=0?'+':''}${sc.toFixed(1)}</span></div></div>`;
+  });
+  document.getElementById('ranking-list').innerHTML=h+'</div>';
+}
+
+function fillHfilt(){
+  const sel=document.getElementById('hfilt');const cur=sel.value;
+  sel.innerHTML='<option value="">全員</option>'+players.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  if(cur)sel.value=cur;
+}
+
+function renderHistory(){
+  const filt=document.getElementById('hfilt')?.value||'';
+  let gs=[...games].filter(g=>g.date>=SCORE_START).sort((a,b)=>b.date.localeCompare(a.date));
+  if(filt)gs=gs.filter(g=>g.results&&g.results.some(r=>r.pid===filt));
+  if(!gs.length){document.getElementById('history-list').innerHTML='<div class="empty">2026年1月1日以降の履歴がないよ</div>';return;}
+  let h='<div class="card">';
+  gs.slice(0,100).forEach(g=>{
+    if(!g.results)return;
+    const sorted=[...g.results].sort((a,b)=>b.score-a.score);
+    const chips=sorted.map((r,i)=>{const p=players.find(x=>x.id===r.pid);return`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${p?p.name:'?'} ${r.score>=0?'+':''}${r.score.toFixed(1)}</span>`;}).join('');
+    h+=`<div class="hitem"><div class="hdate">${g.date} ${g.round}回戦 / ${g.type}人打ち</div><div class="chips">${chips}</div></div>`;
+  });
+  if(gs.length>100)h+=`<div style="text-align:center;font-size:12px;color:#aaa;padding:8px">直近100件表示中</div>`;
+  document.getElementById('history-list').innerHTML=h+'</div>';
+}
+
+function renderPlayers(){
+  if(!players.length){document.getElementById('players-list').innerHTML='<div class="empty">まだ誰もいないよ！</div>';return;}
+  let h='<div class="card">';
+  players.forEach(p=>{
+    const r=RANKS[p.ri||0];
+    h+=`<div class="prow"><div class="pinfo"><div class="pname">${p.name}${p.kana?`<span style="font-size:11px;color:#aaa;margin-left:6px">${p.kana}</span>`:''}</div><div class="psub">${p.games||0}戦参加</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><button class="btn d" style="font-size:11px;padding:3px 8px" onclick="delPlayer('${p.id}')">削除</button></div></div>`;
+  });
+  document.getElementById('players-list').innerHTML=h+'</div>';
+}
+
+window.openModal=function(){document.getElementById('modal-overlay').classList.add('on');};
+window.closeModal=function(){document.getElementById('modal-overlay').classList.remove('on');document.getElementById('new-name').value='';document.getElementById('new-kana').value='';};
+
+window.addPlayer=async function(){
+  const name=document.getElementById('new-name').value.trim();
+  const kana=document.getElementById('new-kana').value.trim();
+  if(!name)return;
+  const pid='p'+Date.now();
+  const pdata={name,kana,ri:0,rpt:0,totalScore:0,games:0};
+  players.push({id:pid,...pdata});
+  try{await savePlayer({id:pid,...pdata});closeModal();refreshAll();}
+  catch(e){alert('保存エラー: '+e.message);}
+};
+
+window.delPlayer=async function(id){
+  if(!confirm('本当に削除する？'))return;
+  players=players.filter(p=>p.id!==id);
+  try{await deleteDoc(doc(db,'players',String(id)));refreshAll();}
+  catch(e){alert('削除エラー: '+e.message);}
+};
+
+window.handleImport=function(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    const msgEl=document.getElementById('import-msg');
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.players||!data.results)throw new Error('フォーマットが違うよ');
+      const npcIds=new Set(data.players.filter(p=>NPC_NAMES.includes(p.name)).map(p=>p.id));
+      const newPlayers=data.players.filter(p=>!NPC_NAMES.includes(p.name)).map(p=>({id:'imp_'+p.id,name:p.name,kana:'',ri:0,rpt:0,totalScore:0,games:0}));
+      const newGames=[];
+      [...data.results].sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((r,idx)=>{
+        const scores=r.playerScores.filter(ps=>!npcIds.has(ps.playerId));
+        if(scores.length<2)return;
+        const entries=scores.map(ps=>({pid:'imp_'+ps.playerId,score:Math.round(ps.score*10)/10,ri:newPlayers.find(x=>x.id==='imp_'+ps.playerId)?.ri||0}));
+        const results=buildResults(entries);
+        newGames.push({id:r.id||('i'+idx),date:r.date?r.date.slice(0,10):'2025-01-01',round:1,type:entries.length,results});
+      });
+      recomputeRanks(newPlayers,newGames);
+      const existIds=new Set(players.map(p=>p.id));
+      const toAdd=newPlayers.filter(p=>!existIds.has(p.id));
+      const existGIds=new Set(games.map(g=>String(g.id)));
+      const gToAdd=newGames.filter(g=>!existGIds.has(String(g.id)));
+      players=[...players,...toAdd];
+      games=[...games,...gToAdd];
+      const batch=writeBatch(db);
+      toAdd.forEach(p=>{const{id,...d}=p;batch.set(doc(db,'players',String(id)),d);});
+      gToAdd.forEach(g=>{const{id,...d}=g;batch.set(doc(db,'games',String(id)),d);});
+      await batch.commit();
+      msgEl.innerHTML=`<div class="msg ok">完了！ 参加者 ${toAdd.length}人・対局 ${gToAdd.length}件を追加したよ</div>`;
+      refreshAll();e.target.value='';
+    }catch(err){msgEl.innerHTML=`<div class="msg ng">読み込み失敗: ${err.message}</div>`;}
+  };
+  reader.readAsText(file);
+};
+
+window.resetAll=async function(){
+  if(!confirm('全データを削除する。本当にいい？'))return;
+  const batch=writeBatch(db);
+  players.forEach(p=>batch.delete(doc(db,'players',String(p.id))));
+  games.forEach(g=>batch.delete(doc(db,'games',String(g.id))));
+  await batch.commit();
+  players=[];games=[];refreshAll();
+};
+
+loadAll();
+</script>
+</body>
+</html>
