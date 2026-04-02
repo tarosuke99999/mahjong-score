@@ -68,10 +68,10 @@ select:focus,input:focus{outline:none;border-color:#888}
 .seg button.on{background:#1a1a1a;color:#fff;font-weight:600}
 .score-pos{color:#2a7a2a;font-weight:600}
 .score-neg{color:#c0392b;font-weight:600}
-.loading{text-align:center;color:#aaa;font-size:13px;padding:3rem 0}
 .rank1{color:#c8a400;font-weight:700}
 .rank2{color:#aaa;font-weight:700}
 .rank3{color:#a0522d;font-weight:700}
+.pt-detail{font-size:11px;color:#aaa;margin-top:2px}
 </style>
 </head>
 <body>
@@ -109,7 +109,7 @@ select:focus,input:focus{outline:none;border-color:#888}
   </div>
   <div class="card">
     <div style="font-size:12px;color:#aaa;margin-bottom:10px">スコアを直接入力（例: +25.0 / -12.5）</div>
-    <div id="slots"><div class="loading">読み込み中...</div></div>
+    <div id="slots"><div class="empty">読み込み中...</div></div>
     <div id="total-bar" class="stotal" style="display:none">
       <span style="font-size:12px;color:#aaa">合計</span>
       <span id="total-val" style="font-weight:600">0.0</span>
@@ -160,6 +160,10 @@ select:focus,input:focus{outline:none;border-color:#888}
     <div id="conn-status" class="msg info">Firebaseに接続中...</div>
   </div>
   <div class="card">
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px">経験値の計算式</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:0">獲得pt = スコア（丸め整数）＋ 順位pt（ウマ）＋ ランク差ボーナス<br>級位：マイナスなし（0止まり）／段位：マイナスあり</div>
+  </div>
+  <div class="card">
     <div style="font-size:13px;font-weight:600;margin-bottom:6px">過去データをインポート</div>
     <div style="font-size:12px;color:#aaa;margin-bottom:10px">Google AI StudioのバックアップJSONを読み込めるよ。NPC・NPC2は自動除外。</div>
     <div class="import-area" onclick="document.getElementById('imp').click()">
@@ -197,7 +201,7 @@ select:focus,input:focus{outline:none;border-color:#888}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAge1UykrGwCLjAJlFWaHVkJHz58Cgvcjw",
@@ -236,35 +240,61 @@ function calcBonus(myRi,oppRi,iWon){
   else{if(diff>-3)return 0;if(diff>-6)return -5;if(diff>-10)return -10;return -15;}
 }
 
+// 獲得pt = round(score) + 順位pt(ウマ) + ランク差ボーナス
 function buildResults(entries){
-  const n=entries.length;const uma=UMA[n]||UMA[4];
+  const n=entries.length;
+  const uma=UMA[n]||UMA[4];
   const sorted=[...entries].sort((a,b)=>b.score-a.score);
-  const umaMap={};sorted.forEach((e,i)=>{umaMap[e.pid]=uma[i+1]||0;});
+  const umaMap={};
+  sorted.forEach((e,i)=>{umaMap[e.pid]=uma[i+1]||0;});
   return entries.map(me=>{
     const place=sorted.findIndex(s=>s.pid===me.pid)+1;
-    const base=umaMap[me.pid]||0;let bonus=0;
-    entries.forEach(opp=>{if(opp.pid===me.pid)return;bonus+=calcBonus(me.ri||0,opp.ri||0,place<(sorted.findIndex(s=>s.pid===opp.pid)+1));});
-    return{...me,place,rpt:base+bonus,bonus};
+    const scorePt=Math.round(me.score);
+    const umaPt=umaMap[me.pid]||0;
+    let bonus=0;
+    entries.forEach(opp=>{
+      if(opp.pid===me.pid)return;
+      bonus+=calcBonus(me.ri||0,opp.ri||0,place<(sorted.findIndex(s=>s.pid===opp.pid)+1));
+    });
+    const rpt=scorePt+umaPt+bonus;
+    return{...me,place,scorePt,umaPt,bonus,rpt};
   });
+}
+
+function applyRankUpdate(p,rpt){
+  const ri=p.ri||0;
+  let newRpt=(p.rpt||0)+rpt;
+  const rank=RANKS[ri];
+  if(rank.t==='k'){
+    if(newRpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}
+    else{p.rpt=Math.max(0,newRpt);}
+  }else{
+    if(newRpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}
+    else if(newRpt<=(rank.dn||0)&&ri>10){p.ri=ri-1;p.rpt=0;}
+    else{p.rpt=newRpt;}
+  }
 }
 
 function recomputeRanks(playerList,gameList){
   playerList.forEach(p=>{p.ri=0;p.rpt=0;p.totalScore=0;p.games=0;});
   const sorted=[...gameList].sort((a,b)=>a.date.localeCompare(b.date));
   sorted.forEach(g=>{
+    if(!g.results)return;
     g.results.forEach(r=>{
       const p=playerList.find(x=>x.id===r.pid);if(!p)return;
-      p.totalScore=(p.totalScore||0)+r.score;p.games=(p.games||0)+1;
-      const ri=p.ri||0;let rpt=(p.rpt||0)+r.rpt;const rank=RANKS[ri];
-      if(rank.t==='k'){if(rpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}else{p.rpt=Math.max(0,rpt);}}
-      else{if(rpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}else if(rpt<=(rank.dn||0)&&ri>10){p.ri=ri-1;p.rpt=0;}else{p.rpt=rpt;}}
+      p.totalScore=(p.totalScore||0)+r.score;
+      p.games=(p.games||0)+1;
+      applyRankUpdate(p,r.rpt);
     });
   });
 }
 
 async function loadAll(){
   try{
-    const [psSnap,gsSnap]=await Promise.all([getDocs(collection(db,'players')),getDocs(collection(db,'games'))]);
+    const [psSnap,gsSnap]=await Promise.all([
+      getDocs(collection(db,'players')),
+      getDocs(collection(db,'games'))
+    ]);
     players=psSnap.docs.map(d=>({id:d.id,...d.data()}));
     games=gsSnap.docs.map(d=>({id:d.id,...d.data()}));
     document.getElementById('conn-status').textContent='Firebaseに接続済み';
@@ -277,15 +307,8 @@ async function loadAll(){
   refreshAll();
 }
 
-async function savePlayer(p){
-  const {id,...data}=p;
-  await setDoc(doc(db,'players',String(id)),data);
-}
-
-async function saveGame(g){
-  const {id,...data}=g;
-  await setDoc(doc(db,'games',String(id)),data);
-}
+async function savePlayer(p){const{id,...d}=p;await setDoc(doc(db,'players',String(id)),d);}
+async function saveGame(g){const{id,...d}=g;await setDoc(doc(db,'games',String(id)),d);}
 
 function makeOpts(selId){
   return players.map(p=>`<option value="${p.id}"${p.id===selId?' selected':''}>${p.name}</option>`).join('');
@@ -403,7 +426,8 @@ function renderRanking(){
     let h='<div class="card">';
     ps.forEach((p,i)=>{
       const r=RANKS[p.ri||0];const pt=p.rpt||0;
-      const range=r.t==='k'?r.up:(r.up-(r.dn||0));const base=r.t==='k'?0:(r.dn||0);
+      const range=r.t==='k'?r.up:(r.up-(r.dn||0));
+      const base=r.t==='k'?0:(r.dn||0);
       const pct=Math.min(100,Math.max(0,Math.round((pt-base)/range*100)));
       const avg=p.games>0?((p.totalScore||0)/p.games).toFixed(2):'-';
       const nc=i===0?'rank1':i===1?'rank2':i===2?'rank3':'pnum';
@@ -414,7 +438,13 @@ function renderRanking(){
   }
 
   const scoreMap={},gamesMap={};
-  filtGames.forEach(g=>{g.results.forEach(r=>{if(!scoreMap[r.pid]){scoreMap[r.pid]=0;gamesMap[r.pid]=0;}scoreMap[r.pid]+=r.score;gamesMap[r.pid]++;});});
+  filtGames.forEach(g=>{
+    if(!g.results)return;
+    g.results.forEach(r=>{
+      if(!scoreMap[r.pid]){scoreMap[r.pid]=0;gamesMap[r.pid]=0;}
+      scoreMap[r.pid]+=r.score;gamesMap[r.pid]++;
+    });
+  });
   let pids=Object.keys(scoreMap);
   if(!pids.length){document.getElementById('ranking-list').innerHTML='<div class="empty">この期間の対局データがないよ</div>';return;}
   let ps=pids.map(pid=>{
@@ -449,7 +479,13 @@ function renderHistory(){
   gs.slice(0,100).forEach(g=>{
     if(!g.results)return;
     const sorted=[...g.results].sort((a,b)=>b.score-a.score);
-    const chips=sorted.map((r,i)=>{const p=players.find(x=>x.id===r.pid);return`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${p?p.name:'?'} ${r.score>=0?'+':''}${r.score.toFixed(1)}</span>`;}).join('');
+    const chips=sorted.map((r,i)=>{
+      const p=players.find(x=>x.id===r.pid);
+      const nm=p?p.name:'?';
+      const sc=r.score;
+      const rptStr=r.rpt!==undefined?(r.rpt>=0?` +${r.rpt}pt`:` ${r.rpt}pt`):'';
+      return`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${nm} ${sc>=0?'+':''}${sc.toFixed(1)}${rptStr}</span>`;
+    }).join('');
     h+=`<div class="hitem"><div class="hdate">${g.date} ${g.round}回戦 / ${g.type}人打ち</div><div class="chips">${chips}</div></div>`;
   });
   if(gs.length>100)h+=`<div style="text-align:center;font-size:12px;color:#aaa;padding:8px">直近100件表示中</div>`;
