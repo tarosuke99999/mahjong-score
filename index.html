@@ -8,7 +8,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f5f4f0;color:#1a1a1a;min-height:100vh}
 .app{max-width:700px;margin:0 auto;padding:1rem}
-h1{font-size:18px;font-weight:600;padding:1rem 0 0.5rem;color:#1a1a1a}
+h1{font-size:18px;font-weight:600;padding:1rem 0 0.5rem}
 .tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:1.5rem;flex-wrap:wrap;background:#fff;border-radius:12px 12px 0 0;padding:0 4px}
 .tab{padding:10px 14px;font-size:13px;cursor:pointer;border:none;background:none;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit}
 .tab.on{color:#1a1a1a;border-bottom-color:#1a1a1a;font-weight:600}
@@ -18,11 +18,9 @@ h1{font-size:18px;font-weight:600;padding:1rem 0 0.5rem;color:#1a1a1a}
 .col{flex:1;min-width:0}
 .col label{display:block;font-size:12px;color:#888;margin-bottom:4px}
 select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8px 10px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;font-family:inherit;-webkit-appearance:none}
-select:focus,input:focus{outline:none;border-color:#888}
 .btn{padding:8px 16px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;cursor:pointer;font-family:inherit}
 .btn:hover{background:#f5f4f0}
 .btn.p{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
-.btn.p:hover{background:#333}
 .btn.d{color:#c0392b;border-color:#e8a9a4}
 .srow{display:grid;grid-template-columns:1fr 90px;gap:8px;align-items:center;padding:9px 10px;background:#f5f4f0;border-radius:8px;margin-bottom:6px}
 .srow select,.srow input{width:100%;min-width:0}
@@ -40,7 +38,7 @@ select:focus,input:focus{outline:none;border-color:#888}
 .bd{background:#fff0d0;color:#a06000}
 .ptval{font-size:13px;font-weight:600;display:block;margin-top:3px}
 .bar{height:3px;background:#eee;border-radius:2px;margin-top:5px;overflow:hidden}
-.barfill{height:100%;border-radius:2px;transition:width 0.3s}
+.barfill{height:100%;border-radius:2px}
 .hitem{padding:9px 0;border-bottom:1px solid #eee}
 .hitem:last-child{border-bottom:none}
 .hdate{font-size:11px;color:#aaa;margin-bottom:5px}
@@ -71,13 +69,12 @@ select:focus,input:focus{outline:none;border-color:#888}
 .rank1{color:#c8a400;font-weight:700}
 .rank2{color:#aaa;font-weight:700}
 .rank3{color:#a0522d;font-weight:700}
-.pt-detail{font-size:11px;color:#aaa;margin-top:2px}
+.bonus-tag{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:600;background:#e8f0fe;color:#1a5fa8;margin-left:3px;vertical-align:middle}
 </style>
 </head>
 <body>
 <div class="app">
 <h1>健康麻雀 成績管理</h1>
-
 <div class="tabs">
   <button class="tab on" onclick="showTab('input',this)">スコア入力</button>
   <button class="tab" onclick="showTab('ranking',this)">ランキング</button>
@@ -85,7 +82,6 @@ select:focus,input:focus{outline:none;border-color:#888}
   <button class="tab" onclick="showTab('players',this)">参加者</button>
   <button class="tab" onclick="showTab('settings',this)">設定</button>
 </div>
-
 <div id="pane-input" class="pane on">
   <div id="alertbox"></div>
   <div class="card">
@@ -93,16 +89,12 @@ select:focus,input:focus{outline:none;border-color:#888}
       <div class="col"><label>対局日</label><input type="date" id="gdate"></div>
       <div class="col"><label>形式</label>
         <select id="gtype" onchange="buildSlots()">
-          <option value="3">3人打ち</option>
-          <option value="4" selected>4人打ち</option>
-          <option value="5">5人打ち</option>
+          <option value="3">3人打ち</option><option value="4" selected>4人打ち</option><option value="5">5人打ち</option>
         </select>
       </div>
       <div class="col"><label>回戦</label>
         <select id="ground">
-          <option value="1">1回戦</option>
-          <option value="2">2回戦</option>
-          <option value="3">3回戦</option>
+          <option value="1">1回戦</option><option value="2">2回戦</option><option value="3">3回戦</option>
         </select>
       </div>
     </div>
@@ -121,7 +113,6 @@ select:focus,input:focus{outline:none;border-color:#888}
     </div>
   </div>
 </div>
-
 <div id="pane-ranking" class="pane">
   <div class="fl">
     <span style="font-size:15px;font-weight:600">ランキング</span>
@@ -139,7 +130,6 @@ select:focus,input:focus{outline:none;border-color:#888}
   <div id="rank-subtitle" style="font-size:12px;color:#aaa;margin-bottom:10px"></div>
   <div id="ranking-list"></div>
 </div>
-
 <div id="pane-history" class="pane">
   <div class="fl">
     <span style="font-size:15px;font-weight:600">履歴</span>
@@ -147,12 +137,10 @@ select:focus,input:focus{outline:none;border-color:#888}
   </div>
   <div id="history-list"></div>
 </div>
-
 <div id="pane-players" class="pane">
   <div class="fl"><span style="font-size:15px;font-weight:600">参加者管理</span><button class="btn p" onclick="openModal()">+ 追加</button></div>
   <div id="players-list"></div>
 </div>
-
 <div id="pane-settings" class="pane">
   <div style="font-size:15px;font-weight:600;margin-bottom:1rem">設定</div>
   <div class="card">
@@ -160,8 +148,12 @@ select:focus,input:focus{outline:none;border-color:#888}
     <div id="conn-status" class="msg info">Firebaseに接続中...</div>
   </div>
   <div class="card">
-    <div style="font-size:13px;font-weight:600;margin-bottom:4px">経験値の計算式</div>
-    <div style="font-size:12px;color:#aaa;margin-bottom:0">獲得pt = スコア（丸め整数）＋ 順位pt（ウマ）＋ ランク差ボーナス<br>級位：マイナスなし（0止まり）／段位：マイナスあり</div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:6px">経験値の計算式</div>
+    <div style="font-size:12px;color:#aaa;line-height:1.8">
+      獲得pt = スコア（丸め整数）＋ 順位pt（ウマ）＋ ランク差ボーナス ＋ 参加ボーナス<br>
+      参加ボーナス：級位者のみ +10pt（毎試合）<br>
+      級位：マイナスなし（0止まり）／段位：マイナスあり
+    </div>
   </div>
   <div class="card">
     <div style="font-size:13px;font-weight:600;margin-bottom:6px">過去データをインポート</div>
@@ -179,7 +171,6 @@ select:focus,input:focus{outline:none;border-color:#888}
     <button class="btn d" onclick="resetAll()">全データを削除する</button>
   </div>
 </div>
-
 <div class="overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-title">参加者を追加</div>
@@ -198,135 +189,67 @@ select:focus,input:focus{outline:none;border-color:#888}
   </div>
 </div>
 </div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAge1UykrGwCLjAJlFWaHVkJHz58Cgvcjw",
-  authDomain: "mahjong-score-fe3f2.firebaseapp.com",
-  projectId: "mahjong-score-fe3f2",
-  storageBucket: "mahjong-score-fe3f2.firebasestorage.app",
-  messagingSenderId: "804212174803",
-  appId: "1:804212174803:web:8c2567ac7331d941804926"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const RANKS=[
-  {l:'10級',t:'k',up:100},{l:'9級',t:'k',up:200},{l:'8級',t:'k',up:300},
-  {l:'7級',t:'k',up:400},{l:'6級',t:'k',up:500},{l:'5級',t:'k',up:600},
-  {l:'4級',t:'k',up:700},{l:'3級',t:'k',up:800},{l:'2級',t:'k',up:900},{l:'1級',t:'k',up:1000},
-  {l:'初段',t:'d',up:200,dn:-100},{l:'二段',t:'d',up:400,dn:-200},
-  {l:'三段',t:'d',up:600,dn:-300},{l:'四段',t:'d',up:800,dn:-400},
-  {l:'五段',t:'d',up:1000,dn:-500},{l:'六段',t:'d',up:1200,dn:-600},
-  {l:'七段',t:'d',up:1400,dn:-700},{l:'八段',t:'d',up:1600,dn:-800},
-  {l:'九段',t:'d',up:1800,dn:-900},{l:'十段',t:'d',up:99999,dn:-1000}
-];
+const firebaseConfig={apiKey:"AIzaSyAge1UykrGwCLjAJlFWaHVkJHz58Cgvcjw",authDomain:"mahjong-score-fe3f2.firebaseapp.com",projectId:"mahjong-score-fe3f2",storageBucket:"mahjong-score-fe3f2.firebasestorage.app",messagingSenderId:"804212174803",appId:"1:804212174803:web:8c2567ac7331d941804926"};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const RANKS=[{l:'10級',t:'k',up:100},{l:'9級',t:'k',up:200},{l:'8級',t:'k',up:300},{l:'7級',t:'k',up:400},{l:'6級',t:'k',up:500},{l:'5級',t:'k',up:600},{l:'4級',t:'k',up:700},{l:'3級',t:'k',up:800},{l:'2級',t:'k',up:900},{l:'1級',t:'k',up:1000},{l:'初段',t:'d',up:200,dn:-100},{l:'二段',t:'d',up:400,dn:-200},{l:'三段',t:'d',up:600,dn:-300},{l:'四段',t:'d',up:800,dn:-400},{l:'五段',t:'d',up:1000,dn:-500},{l:'六段',t:'d',up:1200,dn:-600},{l:'七段',t:'d',up:1400,dn:-700},{l:'八段',t:'d',up:1600,dn:-800},{l:'九段',t:'d',up:1800,dn:-900},{l:'十段',t:'d',up:99999,dn:-1000}];
 const UMA={3:{1:30,2:0,3:-30},4:{1:30,2:10,3:-10,4:-30},5:{1:40,2:20,3:0,4:-20,5:-40}};
-const TYPE_MAP={'three-player':3,'four-player':4,'five-player':5};
 const NPC_NAMES=['NPC','NPC2'];
 const SCORE_START='2026-01-01';
-
-let players=[];
-let games=[];
-let rankPeriod='today';
-
-function calcBonus(myRi,oppRi,iWon){
-  const diff=oppRi-myRi;
-  if(iWon){if(diff<3)return 0;if(diff<6)return 5;if(diff<10)return 10;return 15;}
-  else{if(diff>-3)return 0;if(diff>-6)return -5;if(diff>-10)return -10;return -15;}
-}
-
-// 獲得pt = round(score) + 順位pt(ウマ) + ランク差ボーナス
+const PARTICIPATION_BONUS=10;
+let players=[],games=[],rankPeriod='today';
+function isKyu(ri){return RANKS[ri||0].t==='k';}
+function calcBonus(myRi,oppRi,iWon){const diff=oppRi-myRi;if(iWon){if(diff<3)return 0;if(diff<6)return 5;if(diff<10)return 10;return 15;}else{if(diff>-3)return 0;if(diff>-6)return -5;if(diff>-10)return -10;return -15;}}
 function buildResults(entries){
-  const n=entries.length;
-  const uma=UMA[n]||UMA[4];
+  const n=entries.length;const uma=UMA[n]||UMA[4];
   const sorted=[...entries].sort((a,b)=>b.score-a.score);
-  const umaMap={};
-  sorted.forEach((e,i)=>{umaMap[e.pid]=uma[i+1]||0;});
+  const umaMap={};sorted.forEach((e,i)=>{umaMap[e.pid]=uma[i+1]||0;});
   return entries.map(me=>{
     const place=sorted.findIndex(s=>s.pid===me.pid)+1;
-    const scorePt=Math.round(me.score);
-    const umaPt=umaMap[me.pid]||0;
-    let bonus=0;
-    entries.forEach(opp=>{
-      if(opp.pid===me.pid)return;
-      bonus+=calcBonus(me.ri||0,opp.ri||0,place<(sorted.findIndex(s=>s.pid===opp.pid)+1));
-    });
-    const rpt=scorePt+umaPt+bonus;
-    return{...me,place,scorePt,umaPt,bonus,rpt};
+    const scorePt=Math.round(me.score);const umaPt=umaMap[me.pid]||0;
+    let rankBonus=0;
+    entries.forEach(opp=>{if(opp.pid===me.pid)return;rankBonus+=calcBonus(me.ri||0,opp.ri||0,place<(sorted.findIndex(s=>s.pid===opp.pid)+1));});
+    const participationPt=isKyu(me.ri)?PARTICIPATION_BONUS:0;
+    return{...me,place,scorePt,umaPt,rankBonus,participationPt,rpt:scorePt+umaPt+rankBonus+participationPt};
   });
 }
-
 function applyRankUpdate(p,rpt){
-  const ri=p.ri||0;
-  let newRpt=(p.rpt||0)+rpt;
-  const rank=RANKS[ri];
-  if(rank.t==='k'){
-    if(newRpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}
-    else{p.rpt=Math.max(0,newRpt);}
-  }else{
-    if(newRpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}
-    else if(newRpt<=(rank.dn||0)&&ri>10){p.ri=ri-1;p.rpt=0;}
-    else{p.rpt=newRpt;}
-  }
+  const ri=p.ri||0;let newRpt=(p.rpt||0)+rpt;const rank=RANKS[ri];
+  if(rank.t==='k'){if(newRpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}else{p.rpt=Math.max(0,newRpt);}}
+  else{if(newRpt>=rank.up&&ri<19){p.ri=ri+1;p.rpt=0;}else if(newRpt<=(rank.dn||0)&&ri>10){p.ri=ri-1;p.rpt=0;}else{p.rpt=newRpt;}}
 }
-
-function recomputeRanks(playerList,gameList){
-  playerList.forEach(p=>{p.ri=0;p.rpt=0;p.totalScore=0;p.games=0;});
-  const sorted=[...gameList].sort((a,b)=>a.date.localeCompare(b.date));
-  sorted.forEach(g=>{
+function recomputeRanks(pl,gl){
+  pl.forEach(p=>{p.ri=0;p.rpt=0;p.totalScore=0;p.games=0;});
+  [...gl].sort((a,b)=>a.date.localeCompare(b.date)).forEach(g=>{
     if(!g.results)return;
-    g.results.forEach(r=>{
-      const p=playerList.find(x=>x.id===r.pid);if(!p)return;
-      p.totalScore=(p.totalScore||0)+r.score;
-      p.games=(p.games||0)+1;
-      applyRankUpdate(p,r.rpt);
-    });
+    g.results.forEach(r=>{const p=pl.find(x=>x.id===r.pid);if(!p)return;p.totalScore=(p.totalScore||0)+r.score;p.games=(p.games||0)+1;applyRankUpdate(p,r.rpt);});
   });
 }
-
 async function loadAll(){
   try{
-    const [psSnap,gsSnap]=await Promise.all([
-      getDocs(collection(db,'players')),
-      getDocs(collection(db,'games'))
-    ]);
+    const [psSnap,gsSnap]=await Promise.all([getDocs(collection(db,'players')),getDocs(collection(db,'games'))]);
     players=psSnap.docs.map(d=>({id:d.id,...d.data()}));
     games=gsSnap.docs.map(d=>({id:d.id,...d.data()}));
     document.getElementById('conn-status').textContent='Firebaseに接続済み';
     document.getElementById('conn-status').className='msg ok';
-  }catch(e){
-    document.getElementById('conn-status').textContent='接続エラー: '+e.message;
-    document.getElementById('conn-status').className='msg ng';
-  }
+  }catch(e){document.getElementById('conn-status').textContent='接続エラー: '+e.message;document.getElementById('conn-status').className='msg ng';}
   document.getElementById('gdate').value=new Date().toISOString().slice(0,10);
   refreshAll();
 }
-
 async function savePlayer(p){const{id,...d}=p;await setDoc(doc(db,'players',String(id)),d);}
 async function saveGame(g){const{id,...d}=g;await setDoc(doc(db,'games',String(id)),d);}
-
-function makeOpts(selId){
-  return players.map(p=>`<option value="${p.id}"${p.id===selId?' selected':''}>${p.name}</option>`).join('');
-}
-
+function makeOpts(selId){return players.map(p=>`<option value="${p.id}"${p.id===selId?' selected':''}>${p.name}</option>`).join('');}
 window.buildSlots=function(){
   const n=parseInt(document.getElementById('gtype').value);
-  const c=document.getElementById('slots');
-  const tb=document.getElementById('total-bar');
+  const c=document.getElementById('slots');const tb=document.getElementById('total-bar');
   if(!players.length){c.innerHTML='<div class="empty">まず「参加者」タブで参加者を追加してね</div>';tb.style.display='none';return;}
   let h='';
-  for(let i=0;i<n;i++){
-    const did=players[i]?players[i].id:'';
-    h+=`<div class="srow"><select id="ps${i}">${makeOpts(did)}</select><input type="number" id="sc${i}" placeholder="スコア" step="0.1" oninput="updateTotal()"></div>`;
-  }
+  for(let i=0;i<n;i++){const did=players[i]?players[i].id:'';h+=`<div class="srow"><select id="ps${i}">${makeOpts(did)}</select><input type="number" id="sc${i}" placeholder="スコア" step="0.1" oninput="updateTotal()"></div>`;}
   c.innerHTML=h;tb.style.display='flex';updateTotal();
 };
-
 window.updateTotal=function(){
   const n=parseInt(document.getElementById('gtype').value);
   let total=0,allFilled=true;
@@ -338,13 +261,10 @@ window.updateTotal=function(){
   else if(Math.abs(t)<0.05){ts.textContent='OK';ts.style.color='#2a7a2a';tv.style.color='#2a7a2a';}
   else{ts.textContent=`誤差 ${t>0?'+':''}${t.toFixed(1)}`;ts.style.color='#c0392b';tv.style.color='#c0392b';}
 };
-
 window.clearSlots=function(){
   const n=parseInt(document.getElementById('gtype').value);
-  for(let i=0;i<n;i++){const el=document.getElementById('sc'+i);if(el)el.value='';}
-  updateTotal();
+  for(let i=0;i<n;i++){const el=document.getElementById('sc'+i);if(el)el.value='';}updateTotal();
 };
-
 window.submitGame=async function(){
   const n=parseInt(document.getElementById('gtype').value);
   const date=document.getElementById('gdate').value;
@@ -353,71 +273,45 @@ window.submitGame=async function(){
   const entries=[];const ids=new Set();
   for(let i=0;i<n;i++){
     const pid=document.getElementById('ps'+i)?.value;
-    const sc=document.getElementById('sc'+i)?.value;
-    const score=parseFloat(sc);
+    const sc=document.getElementById('sc'+i)?.value;const score=parseFloat(sc);
     if(!pid){flash(`${i+1}人目を選んでね`,'ng');return;}
     if(sc===''||isNaN(score)){flash(`${i+1}人目のスコアを入力してね`,'ng');return;}
     if(ids.has(pid)){flash('同じプレイヤーが重複してるよ','ng');return;}
-    ids.add(pid);
-    const p=players.find(x=>x.id===pid);
+    ids.add(pid);const p=players.find(x=>x.id===pid);
     entries.push({pid,score:Math.round(score*10)/10,ri:p?p.ri||0:0});
   }
   const total=Math.round(entries.reduce((s,e)=>s+e.score,0)*10)/10;
   if(Math.abs(total)>=0.1){flash(`合計が ${total>0?'+':''}${total.toFixed(1)} になってるよ！確認してね`,'ng');return;}
-  const results=buildResults(entries);
-  const gid=String(Date.now());
-  const gameData={date,round,type:n,results};
-  games.push({id:gid,...gameData});
-  recomputeRanks(players,games);
+  const results=buildResults(entries);const gid=String(Date.now());const gameData={date,round,type:n,results};
+  games.push({id:gid,...gameData});recomputeRanks(players,games);
   try{
     await saveGame({id:gid,...gameData});
-    const batch=writeBatch(db);
-    players.forEach(p=>{const{id,...d}=p;batch.set(doc(db,'players',String(id)),d);});
-    await batch.commit();
-    flash(`${date} ${round}回戦を記録したよ!`,'ok');
-    clearSlots();refreshAll();
+    const batch=writeBatch(db);players.forEach(p=>{const{id,...d}=p;batch.set(doc(db,'players',String(id)),d);});
+    await batch.commit();flash(`${date} ${round}回戦を記録したよ!`,'ok');clearSlots();refreshAll();
   }catch(e){flash('保存エラー: '+e.message,'ng');}
 };
-
-function flash(msg,type){
-  const el=document.getElementById('alertbox');
-  el.innerHTML=`<div class="msg ${type}">${msg}</div>`;
-  setTimeout(()=>el.innerHTML='',4000);
-}
-
+function flash(msg,type){const el=document.getElementById('alertbox');el.innerHTML=`<div class="msg ${type}">${msg}</div>`;setTimeout(()=>el.innerHTML='',4000);}
 window.showTab=function(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   el.classList.add('on');document.getElementById('pane-'+name).classList.add('on');
-  if(name==='input')buildSlots();
-  if(name==='ranking')renderRanking();
-  if(name==='history'){fillHfilt();renderHistory();}
-  if(name==='players')renderPlayers();
+  if(name==='input')buildSlots();if(name==='ranking')renderRanking();
+  if(name==='history'){fillHfilt();renderHistory();}if(name==='players')renderPlayers();
 };
-
 function refreshAll(){buildSlots();renderRanking();renderPlayers();fillHfilt();renderHistory();}
-
-window.setRankPeriod=function(p,el){
-  rankPeriod=p;
-  document.querySelectorAll('#rank-period button').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');renderRanking();
-};
-
+window.setRankPeriod=function(p,el){rankPeriod=p;document.querySelectorAll('#rank-period button').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderRanking();};
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function monthStr(){return new Date().toISOString().slice(0,7);}
-
 function getDateRange(){
   if(rankPeriod==='today'){const t=todayStr();return{from:t,to:t,label:t+' の結果'};}
   if(rankPeriod==='month'){const m=monthStr();return{from:m+'-01',to:m+'-31',label:m.replace('-','年')+'月の合計'};}
   return{from:SCORE_START,to:'9999-12-31',label:'2026年1月1日以降・全期間'};
 }
-
 function renderRanking(){
   const {from,to,label}=getDateRange();
   document.getElementById('rank-subtitle').textContent=label;
   const filt=document.getElementById('rfilt')?.value||'all';
   const filtGames=games.filter(g=>g.date>=from&&g.date<=to);
-
   if(rankPeriod==='all'){
     let ps=[...players].sort((a,b)=>{const ra=a.ri||0,rb=b.ri||0;return ra!==rb?rb-ra:(b.rpt||0)-(a.rpt||0);});
     if(filt==='kyu')ps=ps.filter(p=>RANKS[p.ri||0].t==='k');
@@ -426,50 +320,36 @@ function renderRanking(){
     let h='<div class="card">';
     ps.forEach((p,i)=>{
       const r=RANKS[p.ri||0];const pt=p.rpt||0;
-      const range=r.t==='k'?r.up:(r.up-(r.dn||0));
-      const base=r.t==='k'?0:(r.dn||0);
+      const range=r.t==='k'?r.up:(r.up-(r.dn||0));const base=r.t==='k'?0:(r.dn||0);
       const pct=Math.min(100,Math.max(0,Math.round((pt-base)/range*100)));
       const avg=p.games>0?((p.totalScore||0)/p.games).toFixed(2):'-';
       const nc=i===0?'rank1':i===1?'rank2':i===2?'rank3':'pnum';
-      h+=`<div class="prow"><div class="${nc} pnum">${i+1}</div><div class="pinfo"><div class="pname">${p.name}</div><div class="psub">${p.games||0}戦 / 平均 ${avg}</div><div class="bar"><div class="barfill" style="width:${pct}%;background:${r.t==='d'?'#e8a020':'#3a8fd8'}"></div></div></div><div class="pright"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><span class="ptval">${pt>0?'+':''}${pt}pt</span></div></div>`;
+      const kyuTag=r.t==='k'?'<span class="bonus-tag">参加+10</span>':'';
+      h+=`<div class="prow"><div class="${nc} pnum">${i+1}</div><div class="pinfo"><div class="pname">${p.name}${kyuTag}</div><div class="psub">${p.games||0}戦 / 平均 ${avg}</div><div class="bar"><div class="barfill" style="width:${pct}%;background:${r.t==='d'?'#e8a020':'#3a8fd8'}"></div></div></div><div class="pright"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><span class="ptval">${pt>0?'+':''}${pt}pt</span></div></div>`;
     });
-    document.getElementById('ranking-list').innerHTML=h+'</div>';
-    return;
+    document.getElementById('ranking-list').innerHTML=h+'</div>';return;
   }
-
   const scoreMap={},gamesMap={};
-  filtGames.forEach(g=>{
-    if(!g.results)return;
-    g.results.forEach(r=>{
-      if(!scoreMap[r.pid]){scoreMap[r.pid]=0;gamesMap[r.pid]=0;}
-      scoreMap[r.pid]+=r.score;gamesMap[r.pid]++;
-    });
-  });
+  filtGames.forEach(g=>{if(!g.results)return;g.results.forEach(r=>{if(!scoreMap[r.pid]){scoreMap[r.pid]=0;gamesMap[r.pid]=0;}scoreMap[r.pid]+=r.score;gamesMap[r.pid]++;});});
   let pids=Object.keys(scoreMap);
   if(!pids.length){document.getElementById('ranking-list').innerHTML='<div class="empty">この期間の対局データがないよ</div>';return;}
-  let ps=pids.map(pid=>{
-    const p=players.find(x=>x.id===pid);
-    return{pid,name:p?p.name:'?',score:Math.round(scoreMap[pid]*10)/10,games:gamesMap[pid],ri:p?p.ri||0:0};
-  }).sort((a,b)=>b.score-a.score);
+  let ps=pids.map(pid=>{const p=players.find(x=>x.id===pid);return{pid,name:p?p.name:'?',score:Math.round(scoreMap[pid]*10)/10,games:gamesMap[pid],ri:p?p.ri||0:0};}).sort((a,b)=>b.score-a.score);
   if(filt==='kyu')ps=ps.filter(p=>RANKS[p.ri].t==='k');
   if(filt==='dan')ps=ps.filter(p=>RANKS[p.ri].t==='d');
   if(!ps.length){document.getElementById('ranking-list').innerHTML='<div class="empty">該当する参加者がいないよ</div>';return;}
   let h='<div class="card">';
   ps.forEach((p,i)=>{
-    const r=RANKS[p.ri];const sc=p.score;
-    const avg=p.games>0?(sc/p.games).toFixed(2):'-';
+    const r=RANKS[p.ri];const sc=p.score;const avg=p.games>0?(sc/p.games).toFixed(2):'-';
     const nc=i===0?'rank1':i===1?'rank2':i===2?'rank3':'pnum';
     h+=`<div class="prow"><div class="${nc} pnum">${i+1}</div><div class="pinfo"><div class="pname">${p.name}</div><div class="psub">${p.games}戦 / 平均 ${avg}</div></div><div class="pright"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><span class="ptval ${sc>=0?'score-pos':'score-neg'}">${sc>=0?'+':''}${sc.toFixed(1)}</span></div></div>`;
   });
   document.getElementById('ranking-list').innerHTML=h+'</div>';
 }
-
 function fillHfilt(){
   const sel=document.getElementById('hfilt');const cur=sel.value;
   sel.innerHTML='<option value="">全員</option>'+players.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
   if(cur)sel.value=cur;
 }
-
 function renderHistory(){
   const filt=document.getElementById('hfilt')?.value||'';
   let gs=[...games].filter(g=>g.date>=SCORE_START).sort((a,b)=>b.date.localeCompare(a.date));
@@ -480,49 +360,37 @@ function renderHistory(){
     if(!g.results)return;
     const sorted=[...g.results].sort((a,b)=>b.score-a.score);
     const chips=sorted.map((r,i)=>{
-      const p=players.find(x=>x.id===r.pid);
-      const nm=p?p.name:'?';
-      const sc=r.score;
-      const rptStr=r.rpt!==undefined?(r.rpt>=0?` +${r.rpt}pt`:` ${r.rpt}pt`):'';
-      return`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${nm} ${sc>=0?'+':''}${sc.toFixed(1)}${rptStr}</span>`;
+      const p=players.find(x=>x.id===r.pid);const nm=p?p.name:'?';const sc=r.score;
+      const ptStr=r.rpt!==undefined?(r.rpt>=0?` +${r.rpt}pt`:` ${r.rpt}pt`):'';
+      const bonusStr=r.participationPt?` <span class="bonus-tag">参加+${r.participationPt}</span>`:'';
+      return`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${nm} ${sc>=0?'+':''}${sc.toFixed(1)}${ptStr}${bonusStr}</span>`;
     }).join('');
     h+=`<div class="hitem"><div class="hdate">${g.date} ${g.round}回戦 / ${g.type}人打ち</div><div class="chips">${chips}</div></div>`;
   });
   if(gs.length>100)h+=`<div style="text-align:center;font-size:12px;color:#aaa;padding:8px">直近100件表示中</div>`;
   document.getElementById('history-list').innerHTML=h+'</div>';
 }
-
 function renderPlayers(){
   if(!players.length){document.getElementById('players-list').innerHTML='<div class="empty">まだ誰もいないよ！</div>';return;}
   let h='<div class="card">';
   players.forEach(p=>{
-    const r=RANKS[p.ri||0];
-    h+=`<div class="prow"><div class="pinfo"><div class="pname">${p.name}${p.kana?`<span style="font-size:11px;color:#aaa;margin-left:6px">${p.kana}</span>`:''}</div><div class="psub">${p.games||0}戦参加</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><button class="btn d" style="font-size:11px;padding:3px 8px" onclick="delPlayer('${p.id}')">削除</button></div></div>`;
+    const r=RANKS[p.ri||0];const kyuTag=r.t==='k'?'<span class="bonus-tag">参加+10</span>':'';
+    h+=`<div class="prow"><div class="pinfo"><div class="pname">${p.name} ${kyuTag}${p.kana?`<span style="font-size:11px;color:#aaa;margin-left:4px">${p.kana}</span>`:''}</div><div class="psub">${p.games||0}戦参加</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span class="badge ${r.t==='k'?'bk':'bd'}">${r.l}</span><button class="btn d" style="font-size:11px;padding:3px 8px" onclick="delPlayer('${p.id}')">削除</button></div></div>`;
   });
   document.getElementById('players-list').innerHTML=h+'</div>';
 }
-
 window.openModal=function(){document.getElementById('modal-overlay').classList.add('on');};
 window.closeModal=function(){document.getElementById('modal-overlay').classList.remove('on');document.getElementById('new-name').value='';document.getElementById('new-kana').value='';};
-
 window.addPlayer=async function(){
-  const name=document.getElementById('new-name').value.trim();
-  const kana=document.getElementById('new-kana').value.trim();
-  if(!name)return;
-  const pid='p'+Date.now();
-  const pdata={name,kana,ri:0,rpt:0,totalScore:0,games:0};
+  const name=document.getElementById('new-name').value.trim();const kana=document.getElementById('new-kana').value.trim();if(!name)return;
+  const pid='p'+Date.now();const pdata={name,kana,ri:0,rpt:0,totalScore:0,games:0};
   players.push({id:pid,...pdata});
-  try{await savePlayer({id:pid,...pdata});closeModal();refreshAll();}
-  catch(e){alert('保存エラー: '+e.message);}
+  try{await savePlayer({id:pid,...pdata});closeModal();refreshAll();}catch(e){alert('保存エラー: '+e.message);}
 };
-
 window.delPlayer=async function(id){
-  if(!confirm('本当に削除する？'))return;
-  players=players.filter(p=>p.id!==id);
-  try{await deleteDoc(doc(db,'players',String(id)));refreshAll();}
-  catch(e){alert('削除エラー: '+e.message);}
+  if(!confirm('本当に削除する？'))return;players=players.filter(p=>p.id!==id);
+  try{await deleteDoc(doc(db,'players',String(id)));refreshAll();}catch(e){alert('削除エラー: '+e.message);}
 };
-
 window.handleImport=function(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
@@ -535,19 +403,15 @@ window.handleImport=function(e){
       const newPlayers=data.players.filter(p=>!NPC_NAMES.includes(p.name)).map(p=>({id:'imp_'+p.id,name:p.name,kana:'',ri:0,rpt:0,totalScore:0,games:0}));
       const newGames=[];
       [...data.results].sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((r,idx)=>{
-        const scores=r.playerScores.filter(ps=>!npcIds.has(ps.playerId));
-        if(scores.length<2)return;
+        const scores=r.playerScores.filter(ps=>!npcIds.has(ps.playerId));if(scores.length<2)return;
         const entries=scores.map(ps=>({pid:'imp_'+ps.playerId,score:Math.round(ps.score*10)/10,ri:newPlayers.find(x=>x.id==='imp_'+ps.playerId)?.ri||0}));
         const results=buildResults(entries);
         newGames.push({id:r.id||('i'+idx),date:r.date?r.date.slice(0,10):'2025-01-01',round:1,type:entries.length,results});
       });
       recomputeRanks(newPlayers,newGames);
-      const existIds=new Set(players.map(p=>p.id));
-      const toAdd=newPlayers.filter(p=>!existIds.has(p.id));
-      const existGIds=new Set(games.map(g=>String(g.id)));
-      const gToAdd=newGames.filter(g=>!existGIds.has(String(g.id)));
-      players=[...players,...toAdd];
-      games=[...games,...gToAdd];
+      const existIds=new Set(players.map(p=>p.id));const toAdd=newPlayers.filter(p=>!existIds.has(p.id));
+      const existGIds=new Set(games.map(g=>String(g.id)));const gToAdd=newGames.filter(g=>!existGIds.has(String(g.id)));
+      players=[...players,...toAdd];games=[...games,...gToAdd];
       const batch=writeBatch(db);
       toAdd.forEach(p=>{const{id,...d}=p;batch.set(doc(db,'players',String(id)),d);});
       gToAdd.forEach(g=>{const{id,...d}=g;batch.set(doc(db,'games',String(id)),d);});
@@ -558,16 +422,13 @@ window.handleImport=function(e){
   };
   reader.readAsText(file);
 };
-
 window.resetAll=async function(){
   if(!confirm('全データを削除する。本当にいい？'))return;
   const batch=writeBatch(db);
   players.forEach(p=>batch.delete(doc(db,'players',String(p.id))));
   games.forEach(g=>batch.delete(doc(db,'games',String(g.id))));
-  await batch.commit();
-  players=[];games=[];refreshAll();
+  await batch.commit();players=[];games=[];refreshAll();
 };
-
 loadAll();
 </script>
 </body>
