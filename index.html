@@ -10,7 +10,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku
 .app{max-width:700px;margin:0 auto;padding:1rem}
 h1{font-size:18px;font-weight:600;padding:1rem 0 0.5rem}
 .tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:1.5rem;flex-wrap:wrap;background:#fff;border-radius:12px 12px 0 0;padding:0 4px}
-.tab{padding:10px 12px;font-size:13px;cursor:pointer;border:none;background:none;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit}
+.tab{padding:10px 11px;font-size:12px;cursor:pointer;border:none;background:none;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit}
 .tab.on{color:#1a1a1a;border-bottom-color:#1a1a1a;font-weight:600}
 .pane{display:none}.pane.on{display:block}
 .card{background:#fff;border-radius:12px;padding:1rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
@@ -44,7 +44,8 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
 .barfill{height:100%;border-radius:2px}
 .hitem{padding:9px 0;border-bottom:1px solid #eee}
 .hitem:last-child{border-bottom:none}
-.hdate{font-size:11px;color:#aaa;margin-bottom:5px}
+.hdate{font-size:11px;color:#aaa;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.hdate-link{font-size:11px;color:#1a5fa8;cursor:pointer;text-decoration:underline}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .chip{padding:3px 8px;background:#f5f4f0;border-radius:20px;font-size:12px}
 .chip.hi{background:#e6f4e6;color:#2a7a2a;font-weight:600}
@@ -73,17 +74,18 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
 .rank2{color:#888;font-weight:700}
 .rank3{color:#a0522d;font-weight:700}
 .bonus-tag{display:inline-block;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:600;background:#e8f0fe;color:#1a5fa8;margin-left:3px;vertical-align:middle}
-/* 戦績テーブル */
-.rec-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-.rec-table th{background:#f5f4f0;padding:6px 8px;text-align:center;font-weight:600;font-size:12px;border:1px solid #e0e0e0}
-.rec-table td{padding:6px 8px;text-align:center;border:1px solid #e0e0e0}
-.rec-table tr:hover td{background:#f9f9f9}
+.rec-table{width:100%;border-collapse:collapse;font-size:12px}
+.rec-table th{background:#f5f4f0;padding:5px 6px;text-align:center;font-weight:600;border:1px solid #e0e0e0;white-space:nowrap}
+.rec-table td{padding:5px 6px;text-align:center;border:1px solid #e0e0e0}
 .rec-table .name-col{text-align:left;font-weight:600;white-space:nowrap}
 .rec-table .pos{color:#2a7a2a;font-weight:600}
 .rec-table .neg{color:#c0392b;font-weight:600}
-.rec-table .total-row td{background:#fff8e8;font-weight:600}
-.date-group{margin-bottom:1.5rem}
-.date-group-title{font-size:13px;font-weight:600;color:#888;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #eee}
+.rec-table .day-total td{background:#fff8e8}
+.rec-table .month-total td{background:#f0f8ff;font-weight:700}
+.date-btn{background:none;border:none;color:#1a5fa8;font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:inherit}
+.day-detail{background:#f9f9f9;border-radius:8px;padding:10px;margin-top:6px;display:none}
+.day-detail.on{display:block}
+.day-game-title{font-size:11px;color:#888;margin-bottom:4px;font-weight:600}
 /* 印刷プレビュー */
 .print-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:200;display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:1rem}
 .print-overlay.on{display:flex}
@@ -91,14 +93,14 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
 .print-actions{display:flex;gap:8px;margin-bottom:1rem}
 .print-title{font-size:20px;font-weight:700;margin-bottom:4px;text-align:center}
 .print-sub{font-size:13px;color:#888;margin-bottom:1.5rem;text-align:center}
-.print-table{width:100%;border-collapse:collapse;font-size:13px}
-.print-table th{background:#f0f0f0;padding:7px 10px;text-align:center;font-weight:600;border:1px solid #ccc}
-.print-table td{padding:7px 10px;border:1px solid #ccc;text-align:center}
+.print-table{width:100%;border-collapse:collapse;font-size:12px}
+.print-table th{background:#f0f0f0;padding:6px 8px;text-align:center;font-weight:600;border:1px solid #ccc;white-space:nowrap}
+.print-table td{padding:6px 8px;border:1px solid #ccc;text-align:center}
 .print-table .name-col{text-align:left;font-weight:600}
 .print-table .pos{color:#2a7a2a;font-weight:600}
 .print-table .neg{color:#c0392b;font-weight:600}
 .print-table .total-row td{background:#fff8e8;font-weight:700;border-top:2px solid #ccc}
-.print-table .grand-row td{background:#f0f8ff;font-weight:700;font-size:14px}
+.print-table .grand-row td{background:#f0f8ff;font-weight:700}
 @media print{
   .print-actions{display:none!important}
   .print-overlay{position:static;background:none;padding:0;display:block}
@@ -119,7 +121,6 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   <button class="tab" onclick="showTab('settings',this)">設定</button>
 </div>
 
-<!-- スコア入力 -->
 <div id="pane-input" class="pane on">
   <div id="alertbox"></div>
   <div class="card">
@@ -152,7 +153,6 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   </div>
 </div>
 
-<!-- ランキング -->
 <div id="pane-ranking" class="pane">
   <div class="fl">
     <span style="font-size:15px;font-weight:600">ランキング</span>
@@ -172,7 +172,6 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   <div id="ranking-list"></div>
 </div>
 
-<!-- 履歴 -->
 <div id="pane-history" class="pane">
   <div class="fl">
     <span style="font-size:15px;font-weight:600">履歴</span>
@@ -181,12 +180,11 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   <div id="history-list"></div>
 </div>
 
-<!-- 過去戦績 -->
 <div id="pane-records" class="pane">
   <div class="fl">
     <span style="font-size:15px;font-weight:600">過去戦績</span>
     <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-      <select id="rec-year" onchange="renderRecords()" style="font-size:12px;padding:6px 8px;width:auto"></select>
+      <select id="rec-year" onchange="updateMonthSelector()" style="font-size:12px;padding:6px 8px;width:auto"></select>
       <select id="rec-month" onchange="renderRecords()" style="font-size:12px;padding:6px 8px;width:auto">
         <option value="">月を選択</option>
       </select>
@@ -195,13 +193,11 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   <div id="records-list"></div>
 </div>
 
-<!-- 参加者 -->
 <div id="pane-players" class="pane">
   <div class="fl"><span style="font-size:15px;font-weight:600">参加者管理</span><button class="btn p" onclick="openModal()">+ 追加</button></div>
   <div id="players-list"></div>
 </div>
 
-<!-- 設定 -->
 <div id="pane-settings" class="pane">
   <div style="font-size:15px;font-weight:600;margin-bottom:1rem">設定</div>
   <div class="card">
@@ -233,7 +229,6 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   </div>
 </div>
 
-<!-- 参加者追加モーダル -->
 <div class="overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-title">参加者を追加</div>
@@ -252,7 +247,6 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   </div>
 </div>
 
-<!-- 印刷プレビュー -->
 <div class="print-overlay" id="print-overlay">
   <div class="print-actions">
     <button class="btn p" onclick="window.print()">印刷する</button>
@@ -261,7 +255,7 @@ select,input[type=date],input[type=number],input[type=text]{width:100%;padding:8
   <div class="print-box" id="print-content"></div>
 </div>
 
-</div><!-- .app -->
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -303,7 +297,7 @@ function applyRankUpdate(p,rpt){
 
 function recomputeRanks(pl,gl){
   pl.forEach(p=>{p.ri=0;p.rpt=0;p.totalScore=0;p.games=0;});
-  [...gl].sort((a,b)=>a.date.localeCompare(b.date)).forEach(g=>{
+  [...gl].sort((a,b)=>a.date.localeCompare(b.date)||a.round-b.round).forEach(g=>{
     if(!g.results)return;
     g.results.forEach(r=>{const p=pl.find(x=>x.id===r.pid);if(!p)return;p.totalScore=(p.totalScore||0)+r.score;p.games=(p.games||0)+1;applyRankUpdate(p,r.rpt);});
   });
@@ -327,8 +321,9 @@ async function saveGame(g){const{id,...d}=g;await setDoc(doc(db,'games',String(i
 function makeOpts(selId){return players.map(p=>`<option value="${p.id}"${p.id===selId?' selected':''}>${p.name}</option>`).join('');}
 function pname(pid){const p=players.find(x=>x.id===pid);return p?p.name:'?';}
 function fmtScore(s){return(s>=0?'+':'')+s.toFixed(1);}
+function scClass(s){return s>=0?'pos':'neg';}
 
-// ---- スコア入力 ----
+// スコア入力
 window.buildSlots=function(){
   const n=parseInt(document.getElementById('gtype').value);
   const c=document.getElementById('slots');const tb=document.getElementById('total-bar');
@@ -379,7 +374,7 @@ window.submitGame=async function(){
 };
 function flash(msg,type){const el=document.getElementById('alertbox');el.innerHTML=`<div class="msg ${type}">${msg}</div>`;setTimeout(()=>el.innerHTML='',4000);}
 
-// ---- タブ切り替え ----
+// タブ
 window.showTab=function(name,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
@@ -387,12 +382,12 @@ window.showTab=function(name,el){
   if(name==='input')buildSlots();
   if(name==='ranking')renderRanking();
   if(name==='history'){fillHfilt();renderHistory();}
-  if(name==='records')renderRecords();
+  if(name==='records'){initRecordSelectors();renderRecords();}
   if(name==='players')renderPlayers();
 };
 function refreshAll(){buildSlots();renderRanking();renderPlayers();fillHfilt();renderHistory();initRecordSelectors();}
 
-// ---- ランキング ----
+// ランキング
 window.setRankPeriod=function(p,el){rankPeriod=p;document.querySelectorAll('#rank-period button').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderRanking();};
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function monthStr(){return new Date().toISOString().slice(0,7);}
@@ -401,7 +396,6 @@ function getDateRange(){
   if(rankPeriod==='month'){const m=monthStr();return{from:m+'-01',to:m+'-31',label:m.replace('-','年')+'月の合計'};}
   return{from:SCORE_START,to:'9999-12-31',label:'2026年1月1日以降・全期間'};
 }
-
 function renderRanking(){
   const {from,to,label}=getDateRange();
   document.getElementById('rank-subtitle').textContent=label;
@@ -441,7 +435,7 @@ function renderRanking(){
   document.getElementById('ranking-list').innerHTML=h+'</div>';
 }
 
-// ---- 履歴 ----
+// 履歴
 function fillHfilt(){
   const sel=document.getElementById('hfilt');const cur=sel.value;
   sel.innerHTML='<option value="">全員</option>'+players.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
@@ -449,25 +443,41 @@ function fillHfilt(){
 }
 function renderHistory(){
   const filt=document.getElementById('hfilt')?.value||'';
-  let gs=[...games].filter(g=>g.date>=SCORE_START).sort((a,b)=>b.date.localeCompare(a.date));
-  if(filt)gs=gs.filter(g=>g.results&&g.results.some(r=>r.pid===filt));
+  // 日付でグループ化
+  let gs=[...games].filter(g=>g.date>=SCORE_START&&g.results);
+  if(filt)gs=gs.filter(g=>g.results.some(r=>r.pid===filt));
   if(!gs.length){document.getElementById('history-list').innerHTML='<div class="empty">2026年1月1日以降の履歴がないよ</div>';return;}
+  const dateMap={};
+  gs.forEach(g=>{if(!dateMap[g.date])dateMap[g.date]=[];dateMap[g.date].push(g);});
+  const dates=Object.keys(dateMap).sort((a,b)=>b.localeCompare(a));
   let h='<div class="card">';
-  gs.slice(0,100).forEach(g=>{
-    if(!g.results)return;
-    const sorted=[...g.results].sort((a,b)=>b.score-a.score);
-    const chips=sorted.map((r,i)=>{
-      const ptStr=r.rpt!==undefined?(r.rpt>=0?` +${r.rpt}pt`:` ${r.rpt}pt`):'';
-      const bonusStr=r.participationPt?` <span class="bonus-tag">参加+${r.participationPt}</span>`:'';
-      return`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${pname(r.pid)} ${fmtScore(r.score)}${ptStr}${bonusStr}</span>`;
-    }).join('');
-    h+=`<div class="hitem"><div class="hdate">${g.date} ${g.round}回戦 / ${g.type}人打ち</div><div class="chips">${chips}</div></div>`;
+  dates.slice(0,30).forEach(d=>{
+    const dayGs=[...dateMap[d]].sort((a,b)=>a.round-b.round);
+    h+=`<div class="hitem">`;
+    h+=`<div class="hdate"><span>${d}</span><button class="date-btn" onclick="toggleDayDetail('${d}')">詳細を見る</button></div>`;
+    // 日の合計チップ
+    const dayScoreMap={};
+    dayGs.forEach(g=>g.results.forEach(r=>{dayScoreMap[r.pid]=(dayScoreMap[r.pid]||0)+r.score;}));
+    const dayScoreSorted=Object.entries(dayScoreMap).sort((a,b)=>b[1]-a[1]);
+    h+=`<div class="chips">${dayScoreSorted.map(([pid,sc],i)=>`<span class="chip ${i===0?'hi':i===dayScoreSorted.length-1?'lo':''}">${pname(pid)} ${fmtScore(sc)}</span>`).join('')}</div>`;
+    // 詳細（非表示）
+    h+=`<div class="day-detail" id="dd-${d}">`;
+    dayGs.forEach(g=>{
+      h+=`<div class="day-game-title">${g.round}回戦（${g.type}人打ち）</div>`;
+      const sorted=[...g.results].sort((a,b)=>b.score-a.score);
+      h+=`<div class="chips" style="margin-bottom:8px">${sorted.map((r,i)=>`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${pname(r.pid)} ${fmtScore(r.score)}</span>`).join('')}</div>`;
+    });
+    h+=`</div></div>`;
   });
-  if(gs.length>100)h+=`<div style="text-align:center;font-size:12px;color:#aaa;padding:8px">直近100件表示中</div>`;
+  if(dates.length>30)h+=`<div style="text-align:center;font-size:12px;color:#aaa;padding:8px">直近30日分表示中</div>`;
   document.getElementById('history-list').innerHTML=h+'</div>';
 }
+window.toggleDayDetail=function(d){
+  const el=document.getElementById('dd-'+d);
+  if(el)el.classList.toggle('on');
+};
 
-// ---- 過去戦績 ----
+// 過去戦績
 function initRecordSelectors(){
   const dates=games.map(g=>g.date).filter(Boolean);
   const years=[...new Set(dates.map(d=>d.slice(0,4)))].sort((a,b)=>b-a);
@@ -476,17 +486,14 @@ function initRecordSelectors(){
   ySel.innerHTML=years.map(y=>`<option value="${y}"${y===curY?' selected':''}>${y}年</option>`).join('');
   updateMonthSelector();
 }
-
-function updateMonthSelector(){
+window.updateMonthSelector=function(){
   const y=document.getElementById('rec-year').value;
   const months=[...new Set(games.filter(g=>g.date&&g.date.startsWith(y)).map(g=>g.date.slice(5,7)))].sort();
   const mSel=document.getElementById('rec-month');
-  const curM=new Date().getMonth()+1;
-  const curMStr=String(curM).padStart(2,'0');
-  mSel.innerHTML='<option value="">月を選択</option>'+months.map(m=>`<option value="${m}"${m===curMStr?' selected':''}>${parseInt(m)}月</option>`).join('');
+  const curM=String(new Date().getMonth()+1).padStart(2,'0');
+  mSel.innerHTML='<option value="">月を選択</option>'+months.map(m=>`<option value="${m}"${m===curM?' selected':''}>${parseInt(m)}月</option>`).join('');
   renderRecords();
-}
-
+};
 window.renderRecords=function(){
   const y=document.getElementById('rec-year')?.value||'';
   const m=document.getElementById('rec-month')?.value||'';
@@ -495,129 +502,111 @@ window.renderRecords=function(){
   const gs=[...games].filter(g=>g.date&&g.date.startsWith(prefix)&&g.results).sort((a,b)=>a.date.localeCompare(b.date)||a.round-b.round);
   if(!gs.length){document.getElementById('records-list').innerHTML='<div class="empty">この月の対局データがないよ</div>';return;}
 
-  // 参加者一覧（この月に参加した人）
-  const pidSet=new Set();
-  gs.forEach(g=>g.results.forEach(r=>pidSet.add(r.pid)));
-  const pids=[...pidSet];
-  const plist=pids.map(pid=>({pid,name:pname(pid)})).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
-
-  // 日付ごとにグループ化
+  // 日付ごとにグループ化して、同日内で回戦を連番に
   const dateMap={};
   gs.forEach(g=>{if(!dateMap[g.date])dateMap[g.date]=[];dateMap[g.date].push(g);});
   const dates=Object.keys(dateMap).sort();
 
-  // テーブルヘッダー
-  let h='<div class="card" style="overflow-x:auto">';
-  h+=`<table class="rec-table"><thead><tr><th class="name-col">名前</th>`;
-  dates.forEach(d=>{
-    const dayGs=dateMap[d];
-    dayGs.forEach(g=>{h+=`<th>${d.slice(5).replace('-','/')}<br>${g.round}回戦</th>`;});
-    h+=`<th style="background:#fff8e8">${d.slice(5).replace('-','/')}<br>合計</th>`;
-  });
-  h+=`<th style="background:#f0f8ff">月間<br>合計</th></tr></thead><tbody>`;
+  // 参加者一覧
+  const pidSet=new Set();gs.forEach(g=>g.results.forEach(r=>pidSet.add(r.pid)));
+  const plist=[...pidSet].map(pid=>({pid,name:pname(pid)})).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
 
-  // 各プレイヤーの行
-  plist.forEach(({pid,name})=>{
-    h+=`<tr><td class="name-col">${name}</td>`;
-    let monthTotal=0;
+  // 月間合計でソート
+  const monthTotals={};
+  plist.forEach(({pid})=>{monthTotals[pid]=gs.reduce((s,g)=>{const r=g.results.find(x=>x.pid===pid);return s+(r?r.score:0);},0);});
+  const sortedPlist=[...plist].sort((a,b)=>monthTotals[b.pid]-monthTotals[a.pid]);
+
+  let h='<div style="overflow-x:auto"><table class="rec-table"><thead>';
+  // ヘッダー1行目：日付（各日のゲーム数分colspan）
+  h+=`<tr><th class="name-col" rowspan="2">名前</th>`;
+  dates.forEach(d=>{
+    const cnt=dateMap[d].length;
+    h+=`<th colspan="${cnt+1}" style="background:#e8f0fe">${d.slice(5).replace('-','/')}</th>`;
+  });
+  h+=`<th rowspan="2" style="background:#f0f8ff">月間<br>合計</th></tr>`;
+  // ヘッダー2行目：回戦 + 日計
+  h+=`<tr>`;
+  dates.forEach(d=>{
+    dateMap[d].forEach((_,i)=>{h+=`<th>${i+1}回戦</th>`;});
+    h+=`<th style="background:#fff8e8">日計</th>`;
+  });
+  h+=`</tr></thead><tbody>`;
+
+  sortedPlist.forEach(({pid,name},ri)=>{
+    h+=`<tr><td class="name-col">${ri+1}. ${name}</td>`;
+    let mTotal=0;
     dates.forEach(d=>{
       const dayGs=dateMap[d];
       let dayTotal=0;
       dayGs.forEach(g=>{
         const r=g.results.find(x=>x.pid===pid);
-        if(r){
-          const sc=r.score;dayTotal+=sc;
-          h+=`<td class="${sc>=0?'pos':'neg'}">${fmtScore(sc)}</td>`;
-        }else{h+=`<td style="color:#ddd">-</td>`;}
+        if(r){dayTotal+=r.score;h+=`<td class="${scClass(r.score)}">${fmtScore(r.score)}</td>`;}
+        else h+=`<td style="color:#ddd">-</td>`;
       });
-      monthTotal+=dayTotal;
-      h+=`<td class="${dayTotal>=0?'pos':'neg'}" style="background:#fff8e8">${fmtScore(dayTotal)}</td>`;
+      mTotal+=dayTotal;
+      const played=dayGs.some(g=>g.results.find(x=>x.pid===pid));
+      h+=`<td class="${scClass(dayTotal)}" style="background:#fff8e8">${played?fmtScore(dayTotal):'-'}</td>`;
     });
-    h+=`<td class="${monthTotal>=0?'pos':'neg'}" style="background:#f0f8ff;font-weight:700">${fmtScore(monthTotal)}</td>`;
-    h+=`</tr>`;
+    h+=`<td class="${scClass(mTotal)}" style="background:#f0f8ff;font-weight:700">${fmtScore(mTotal)}</td></tr>`;
   });
   h+=`</tbody></table></div>`;
+
+  // 1日の詳細（クリックで展開）
+  h+=`<div style="margin-top:1rem">`;
+  dates.forEach(d=>{
+    const dayGs=dateMap[d];
+    h+=`<div class="card" style="margin-bottom:8px">`;
+    h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:600">${d}</span><button class="date-btn" onclick="toggleDayDetail2('${d}')">対局詳細</button></div>`;
+    h+=`<div class="day-detail" id="dd2-${d}">`;
+    dayGs.forEach((g,i)=>{
+      h+=`<div class="day-game-title">${i+1}回戦（${g.type}人打ち）</div>`;
+      const sorted=[...g.results].sort((a,b)=>b.score-a.score);
+      h+=`<div class="chips" style="margin-bottom:8px">${sorted.map((r,si)=>`<span class="chip ${si===0?'hi':si===sorted.length-1?'lo':''}">${pname(r.pid)} ${fmtScore(r.score)}</span>`).join('')}</div>`;
+    });
+    h+=`</div></div>`;
+  });
+  h+=`</div>`;
   document.getElementById('records-list').innerHTML=h;
 };
+window.toggleDayDetail2=function(d){
+  const el=document.getElementById('dd2-'+d);if(el)el.classList.toggle('on');
+};
 
-document.getElementById('rec-year').addEventListener('change',updateMonthSelector);
-
-// ---- 印刷プレビュー ----
+// 印刷プレビュー
 window.openPrintPreview=function(){
   const {from,to,label}=getDateRange();
   const filtGames=games.filter(g=>g.date>=from&&g.date<=to&&g.results);
-
   let html='';
   if(rankPeriod==='today'){
-    // 今日：対戦ごとのスコア + 日合計
     const dateStr=todayStr();
-    html+=`<div class="print-title">健康麻雀 成績表</div>`;
-    html+=`<div class="print-sub">${dateStr}</div>`;
-
-    // 参加者一覧
-    const pidSet=new Set();
-    filtGames.forEach(g=>g.results.forEach(r=>pidSet.add(r.pid)));
-    const pids=[...pidSet];
-    const plist=pids.map(pid=>({pid,name:pname(pid)})).sort((a,b)=>a.name.localeCompare(b.name,'ja'));
+    html+=`<div class="print-title">健康麻雀 成績表</div><div class="print-sub">${dateStr}</div>`;
+    const pidSet=new Set();filtGames.forEach(g=>g.results.forEach(r=>pidSet.add(r.pid)));
     const sortedGs=[...filtGames].sort((a,b)=>a.round-b.round);
-
-    html+=`<table class="print-table"><thead><tr><th class="name-col">名前</th>`;
-    sortedGs.forEach(g=>{html+=`<th>${g.round}回戦<br>(${g.type}人)</th>`;});
-    html+=`<th>合計</th></tr></thead><tbody>`;
-
-    // スコアマップ
     const scoreMap={};
-    sortedGs.forEach((g,gi)=>{
-      g.results.forEach(r=>{
-        if(!scoreMap[r.pid])scoreMap[r.pid]=new Array(sortedGs.length).fill(null);
-        scoreMap[r.pid][gi]=r.score;
-      });
-    });
-
-    // ソート：合計降順
-    const totals={};
-    plist.forEach(({pid})=>{totals[pid]=(scoreMap[pid]||[]).reduce((s,v)=>s+(v||0),0);});
-    const sorted=[...plist].sort((a,b)=>totals[b.pid]-totals[a.pid]);
-
+    sortedGs.forEach((g,gi)=>{g.results.forEach(r=>{if(!scoreMap[r.pid])scoreMap[r.pid]=new Array(sortedGs.length).fill(null);scoreMap[r.pid][gi]=r.score;});});
+    const totals={};[...pidSet].forEach(pid=>{totals[pid]=(scoreMap[pid]||[]).reduce((s,v)=>s+(v||0),0);});
+    const sorted=[...pidSet].map(pid=>({pid,name:pname(pid)})).sort((a,b)=>totals[b.pid]-totals[a.pid]);
+    html+=`<table class="print-table"><thead><tr><th class="name-col">名前</th>`;
+    sortedGs.forEach((g,i)=>{html+=`<th>${i+1}回戦<br>(${g.type}人)</th>`;});
+    html+=`<th>合計</th></tr></thead><tbody>`;
     sorted.forEach(({pid,name},i)=>{
-      const row=scoreMap[pid]||[];
-      const total=totals[pid];
+      const row=scoreMap[pid]||[];const total=totals[pid];
       html+=`<tr><td class="name-col">${i+1}. ${name}</td>`;
-      sortedGs.forEach((_,gi)=>{
-        const v=row[gi];
-        if(v!=null)html+=`<td class="${v>=0?'pos':'neg'}">${fmtScore(v)}</td>`;
-        else html+=`<td style="color:#ccc">-</td>`;
-      });
-      html+=`<td class="total-row ${total>=0?'pos':'neg'}">${fmtScore(total)}</td></tr>`;
+      sortedGs.forEach((_,gi)=>{const v=row[gi];if(v!=null)html+=`<td class="${scClass(v)}">${fmtScore(v)}</td>`;else html+=`<td style="color:#ccc">-</td>`;});
+      html+=`<td class="total-row ${scClass(total)}">${fmtScore(total)}</td></tr>`;
     });
     html+=`</tbody></table>`;
-
   } else if(rankPeriod==='month'){
-    // 今月：開催日ごとの合計 + 月間合計
     const m=monthStr();
-    html+=`<div class="print-title">健康麻雀 月間成績表</div>`;
-    html+=`<div class="print-sub">${m.replace('-','年')}月</div>`;
-
-    const dateMap={};
-    filtGames.forEach(g=>{if(!dateMap[g.date])dateMap[g.date]=[];dateMap[g.date].push(g);});
+    html+=`<div class="print-title">健康麻雀 月間成績表</div><div class="print-sub">${m.replace('-','年')}月</div>`;
+    const dateMap={};filtGames.forEach(g=>{if(!dateMap[g.date])dateMap[g.date]=[];dateMap[g.date].push(g);});
     const dates=Object.keys(dateMap).sort();
-
-    const pidSet=new Set();
-    filtGames.forEach(g=>g.results.forEach(r=>pidSet.add(r.pid)));
-    const pids=[...pidSet];
-    const plist=pids.map(pid=>({pid,name:pname(pid)}));
-
-    // 月間合計でソート
-    const monthTotals={};
-    plist.forEach(({pid})=>{
-      monthTotals[pid]=filtGames.filter(g=>g.results).reduce((s,g)=>{const r=g.results.find(x=>x.pid===pid);return s+(r?r.score:0);},0);
-    });
-    const sorted=[...plist].sort((a,b)=>monthTotals[b.pid]-monthTotals[a.pid]);
-
+    const pidSet=new Set();filtGames.forEach(g=>g.results.forEach(r=>pidSet.add(r.pid)));
+    const monthTotals={};[...pidSet].forEach(pid=>{monthTotals[pid]=filtGames.reduce((s,g)=>{const r=g.results.find(x=>x.pid===pid);return s+(r?r.score:0);},0);});
+    const sorted=[...pidSet].map(pid=>({pid,name:pname(pid)})).sort((a,b)=>monthTotals[b.pid]-monthTotals[a.pid]);
     html+=`<table class="print-table"><thead><tr><th class="name-col">名前</th>`;
     dates.forEach(d=>{html+=`<th>${d.slice(5).replace('-','/')}</th>`;});
     html+=`<th>月間合計</th></tr></thead><tbody>`;
-
     sorted.forEach(({pid,name},i)=>{
       html+=`<tr><td class="name-col">${i+1}. ${name}</td>`;
       let mTotal=0;
@@ -626,23 +615,20 @@ window.openPrintPreview=function(){
         const dayTotal=gs.reduce((s,g)=>{const r=g.results&&g.results.find(x=>x.pid===pid);return s+(r?r.score:0);},0);
         const played=gs.some(g=>g.results&&g.results.find(x=>x.pid===pid));
         mTotal+=dayTotal;
-        if(played)html+=`<td class="${dayTotal>=0?'pos':'neg'}">${fmtScore(dayTotal)}</td>`;
-        else html+=`<td style="color:#ccc">-</td>`;
+        html+=played?`<td class="${scClass(dayTotal)}">${fmtScore(dayTotal)}</td>`:`<td style="color:#ccc">-</td>`;
       });
-      html+=`<td class="grand-row ${mTotal>=0?'pos':'neg'}">${fmtScore(mTotal)}</td></tr>`;
+      html+=`<td class="grand-row ${scClass(mTotal)}">${fmtScore(mTotal)}</td></tr>`;
     });
     html+=`</tbody></table>`;
   } else {
-    html=`<div class="print-title">健康麻雀 成績表</div><div class="print-sub">全期間印刷は今日・今月を選択してね</div>`;
+    html=`<div class="print-title">健康麻雀 成績表</div><div class="print-sub">「今日」か「今月」を選択して印刷してね</div>`;
   }
-
   document.getElementById('print-content').innerHTML=html;
   document.getElementById('print-overlay').classList.add('on');
 };
-
 window.closePrintPreview=function(){document.getElementById('print-overlay').classList.remove('on');};
 
-// ---- 参加者管理 ----
+// 参加者管理
 function renderPlayers(){
   if(!players.length){document.getElementById('players-list').innerHTML='<div class="empty">まだ誰もいないよ！</div>';return;}
   let h='<div class="card">';
@@ -665,7 +651,7 @@ window.delPlayer=async function(id){
   try{await deleteDoc(doc(db,'players',String(id)));refreshAll();}catch(e){alert('削除エラー: '+e.message);}
 };
 
-// ---- インポート・リセット ----
+// インポート・リセット
 window.handleImport=function(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
@@ -676,12 +662,18 @@ window.handleImport=function(e){
       if(!data.players||!data.results)throw new Error('フォーマットが違うよ');
       const npcIds=new Set(data.players.filter(p=>NPC_NAMES.includes(p.name)).map(p=>p.id));
       const newPlayers=data.players.filter(p=>!NPC_NAMES.includes(p.name)).map(p=>({id:'imp_'+p.id,name:p.name,kana:'',ri:0,rpt:0,totalScore:0,games:0}));
+      // 日付ごとに回戦番号を自動付与
+      const dateCountMap={};
       const newGames=[];
       [...data.results].sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((r,idx)=>{
         const scores=r.playerScores.filter(ps=>!npcIds.has(ps.playerId));if(scores.length<2)return;
+        const date=r.date?r.date.slice(0,10):'2025-01-01';
+        if(!dateCountMap[date])dateCountMap[date]=0;
+        dateCountMap[date]++;
+        const round=dateCountMap[date];
         const entries=scores.map(ps=>({pid:'imp_'+ps.playerId,score:Math.round(ps.score*10)/10,ri:newPlayers.find(x=>x.id==='imp_'+ps.playerId)?.ri||0}));
         const results=buildResults(entries);
-        newGames.push({id:r.id||('i'+idx),date:r.date?r.date.slice(0,10):'2025-01-01',round:1,type:entries.length,results});
+        newGames.push({id:r.id||('i'+idx),date,round,type:entries.length,results});
       });
       recomputeRanks(newPlayers,newGames);
       const existIds=new Set(players.map(p=>p.id));const toAdd=newPlayers.filter(p=>!existIds.has(p.id));
