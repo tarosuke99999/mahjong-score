@@ -463,7 +463,7 @@ function renderHistory(){
     // 詳細（非表示）
     h+=`<div class="day-detail" id="dd-${d}">`;
     dayGs.forEach(g=>{
-      h+=`<div class="day-game-title">${g.round}回戦（${g.type}人打ち）</div>`;
+      h+=`<div class="day-game-title">${g.type}人打ち</div>`;
       const sorted=[...g.results].sort((a,b)=>b.score-a.score);
       h+=`<div class="chips" style="margin-bottom:8px">${sorted.map((r,i)=>`<span class="chip ${i===0?'hi':i===sorted.length-1?'lo':''}">${pname(r.pid)} ${fmtScore(r.score)}</span>`).join('')}</div>`;
     });
@@ -527,7 +527,7 @@ window.renderRecords=function(){
   // ヘッダー2行目：回戦 + 日計
   h+=`<tr>`;
   dates.forEach(d=>{
-    dateMap[d].forEach((_,i)=>{h+=`<th>${i+1}回戦</th>`;});
+    dateMap[d].forEach((_,i)=>{h+=`<th>${i+1}</th>`;});
     h+=`<th style="background:#fff8e8">日計</th>`;
   });
   h+=`</tr></thead><tbody>`;
@@ -559,7 +559,7 @@ window.renderRecords=function(){
     h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:13px;font-weight:600">${d}</span><button class="date-btn" onclick="toggleDayDetail2('${d}')">対局詳細</button></div>`;
     h+=`<div class="day-detail" id="dd2-${d}">`;
     dayGs.forEach((g,i)=>{
-      h+=`<div class="day-game-title">${i+1}回戦（${g.type}人打ち）</div>`;
+      h+=`<div class="day-game-title">${g.type}人打ち</div>`;
       const sorted=[...g.results].sort((a,b)=>b.score-a.score);
       h+=`<div class="chips" style="margin-bottom:8px">${sorted.map((r,si)=>`<span class="chip ${si===0?'hi':si===sorted.length-1?'lo':''}">${pname(r.pid)} ${fmtScore(r.score)}</span>`).join('')}</div>`;
     });
@@ -587,7 +587,7 @@ window.openPrintPreview=function(){
     const totals={};[...pidSet].forEach(pid=>{totals[pid]=(scoreMap[pid]||[]).reduce((s,v)=>s+(v||0),0);});
     const sorted=[...pidSet].map(pid=>({pid,name:pname(pid)})).sort((a,b)=>totals[b.pid]-totals[a.pid]);
     html+=`<table class="print-table"><thead><tr><th class="name-col">名前</th>`;
-    sortedGs.forEach((g,i)=>{html+=`<th>${i+1}回戦<br>(${g.type}人)</th>`;});
+    sortedGs.forEach((g,i)=>{html+=`<th>${i+1}<br>(${g.type}人)</th>`;});
     html+=`<th>合計</th></tr></thead><tbody>`;
     sorted.forEach(({pid,name},i)=>{
       const row=scoreMap[pid]||[];const total=totals[pid];
